@@ -338,7 +338,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayBuilder, JjsonA
             try {
                 return number.intValue();
             } catch (Exception e) {
-                logger.error("Number not a short");
+                logger.error("Number not an integer");
             }
         }
         return def;
@@ -351,7 +351,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayBuilder, JjsonA
             try {
                 return number.longValue();
             } catch (Exception e) {
-                logger.error("Number not a short");
+                logger.error("Number not a long");
             }
         }
         return def;
@@ -364,7 +364,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayBuilder, JjsonA
             try {
                 return number.floatValue();
             } catch (Exception e) {
-                logger.error("Number not a short");
+                logger.error("Number not a float");
             }
         }
         return def;
@@ -377,7 +377,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayBuilder, JjsonA
             try {
                 return number.doubleValue();
             } catch (Exception e) {
-                logger.error("Number not a short");
+                logger.error("Number not a double");
             }
         }
         return def;

@@ -10,6 +10,12 @@ import java.text.ParseException;
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final Logger logger = new Logger(JjsonConverter.class);
 
+    private static final String BN = "##BN##";
+    private static final String BR = "##BR##";
+    private static final String BT = "##BT##";
+    private static final String BF = "##BF##";
+    private static final String BB = "##BB##";
+
     protected int getCloseJsonValueString(final char[] jsonChars, final char open, final char close, final int start) {
         int number = 1;
         int numberFound = 0;
@@ -171,8 +177,8 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
 
         return false;
     }
-
     // end of json
+
     protected int eoj(final char[] jsonChars, int index, final char closeChar) throws JjsonException {
         final Object[] findComma = findCharWithoutSpace(jsonChars, index);
         if (findComma == null) {
@@ -201,12 +207,6 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         }
         return i;
     }
-
-    private static final String BN = "##BN##";
-    private static final String BR = "##BR##";
-    private static final String BT = "##BT##";
-    private static final String BF = "##BF##";
-    private static final String BB = "##BB##";
 
     public String stringFormatter(final String str) {
         if (str == null) {

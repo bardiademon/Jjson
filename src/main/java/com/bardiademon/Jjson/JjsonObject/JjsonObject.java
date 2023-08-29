@@ -251,7 +251,7 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
             try {
                 return value.longValue();
             } catch (Exception e) {
-                logger.error("Number not an long");
+                logger.error("Number not a long");
             }
         }
         return def;
