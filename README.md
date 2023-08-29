@@ -44,7 +44,7 @@ public class JjsonObjectTest {
 
 #### output
 
-```text
+```json
 Encode: {"id":"bardiademon","name":"Bardia Namjoo","programmer":true,"age":27}
 Encode formatter: {
   "id": "bardiademon",
@@ -128,7 +128,7 @@ public class JjsonArrayTest {
 }
 ```
 #### output
-```text
+```json
 [1,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]
 number.intValue() = 5
 [2,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],"bardiademon",["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]},5,"New String",{"name":"bardiademon"}]
