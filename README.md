@@ -34,10 +34,10 @@ public class JjsonObjectTest {
         jjsonObject.put("age", 27);
 
         final String encode = jjsonObject.encode();
-        System.out.println("Encode: " + encode);
+        System.out.println(encode);
 
         final String encodeFormatter = jjsonObject.encodeFormatter();
-        System.out.println("Encode formatter: " + encodeFormatter);
+        System.out.println(encodeFormatter);
     }
 }
 ```
@@ -45,8 +45,8 @@ public class JjsonObjectTest {
 #### output
 
 ```json
-Encode: {"id":"bardiademon","name":"Bardia Namjoo","programmer":true,"age":27}
-Encode formatter: {
+{"id":"bardiademon","name":"Bardia Namjoo","programmer":true,"age":27}
+{
   "id": "bardiademon",
   "name": "Bardia Namjoo",
   "programmer": true,
