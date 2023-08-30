@@ -17,10 +17,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
     public JjsonObject fromString(String json) throws JjsonException {
         try {
-
-            if (isEmpty(json, '{', '}')) {
-                return new JjsonObject();
-            }
+            logger.trace("from string: {}", json);
 
             json = json.trim();
 
@@ -30,6 +27,11 @@ public final class JjsonObjectConverter extends JjsonConverter {
             if (!json.endsWith("}")) {
                 throw new JjsonException("Json object must with } end", json.length() - 1);
             }
+
+            if (isEmpty(json, '{', '}')) {
+                return new JjsonObject();
+            }
+
             final char[] jsonChars = json.toCharArray();
 
             int index = 1;
