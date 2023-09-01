@@ -1,10 +1,41 @@
 # JavaJson(Jjson)
 
-#### It is a library for managing, generating and working with Json, which is built without using any additional libraries
+It is a library for managing, generating and working with Json, which is built without using any additional libraries
 
-# Capabilities
+Java version
+-----
 
-### Creating an object from the JjsonObject class and putting values into it
+This library was built for Java 17, the latest LTS. 
+[Click to download](https://dev.java)
+
+Maven
+-----
+
+* Step 1. Add the bardiademon-repository to your build file
+
+```xml
+<repositories>
+    <repository>
+        <id>bardiademon-repository</id>
+        <url>https://bardiademon.com/repository</url>
+    </repository>
+</repositories>
+```
+
+* Step 2. Add the dependency
+
+```xml
+<dependency>
+    <groupId>com.bardiademon</groupId>
+    <artifactId>Jjson</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+Usage
+-----
+
+Creating an object from the JjsonObject class and putting values into it
 
 ```java
 public class JjsonObjectTest {
@@ -20,7 +51,7 @@ public class JjsonObjectTest {
 }
 ```
 
-### Format
+Format
 
 ```java
 
@@ -42,10 +73,13 @@ public class JjsonObjectTest {
 }
 ```
 
-#### output
+output
 
 ```json
-{"id":"bardiademon","name":"Bardia Namjoo","programmer":true,"age":27}
+{"id": "bardiademon","name": "Bardia Namjoo","programmer": true,"age": 27}
+```
+
+```json
 {
   "id": "bardiademon",
   "name": "Bardia Namjoo",
@@ -54,7 +88,8 @@ public class JjsonObjectTest {
 }
 ```
 
-### Creating an object of the JjsonObject class with a String of Json
+Creating an object of the JjsonObject class with a String of Json
+-----
 
 ```java
 public class JjsonObjectTest {
@@ -89,7 +124,9 @@ public class JjsonObjectTest {
 }
 ```
 
-### Working with JjsonArray is the same way
+Working with JjsonArray is the same way
+-----
+
 ```java
 public class JjsonArrayTest {
     public static void main(String[] args) throws JjsonException {
@@ -127,11 +164,19 @@ public class JjsonArrayTest {
     }
 }
 ```
-#### output
+
+output
+
 ```json
 [1,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]
+```
+```text
 number.intValue() = 5
+```
+```json
 [2,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],"bardiademon",["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]},5,"New String",{"name":"bardiademon"}]
+```
+```text
 string = DEFAULT VALUE
 aBoolean = true
 ```
@@ -140,9 +185,11 @@ aBoolean = true
     💻 Technologies
 </h1>
 
-<div align="center">
-    <a href="https://java.dev" target="_blank"><img src="https://img.shields.io/badge/-Java-0D1117?style=for-the-badge&logo=java" alt="Bardiademon-Gmail"></a>
-</div>
+<p align="center">
+  <a href="https://dev.java">
+    <img src="https://skillicons.dev/icons?i=java"  alt="Java"/>
+  </a>
+</p>
 
 <h1 align="center">
     🌟 Spread the word!
