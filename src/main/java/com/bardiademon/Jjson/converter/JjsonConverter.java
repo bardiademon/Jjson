@@ -34,7 +34,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
 
     protected Object[] findCharWithoutSpace(final char[] jsonChars, final int start) {
         for (int i = start; i < jsonChars.length; i++) {
-            if ((i - 1 >= 0 && jsonChars[i - 1] != '\\') && jsonChars[i] != ' ' && jsonChars[i] != '\t' && jsonChars[i] != '\n') {
+            if ((i - 1 >= 0 && jsonChars[i - 1] != '\\') && jsonChars[i] != ' ' && jsonChars[i] != '\t' && jsonChars[i] != '\n' && jsonChars[i] != '\r') {
                 return new Object[]{i, jsonChars[i]};
             }
         }
