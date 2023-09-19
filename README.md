@@ -96,7 +96,7 @@ public class JjsonObjectTest {
     public static void main(String[] args) {
 
         try {
-            final JjsonObject fromString = JjsonObject.fromString("{\"id\":\"bardiademon\",\"name\":\"Bardia Namjoo\",\"programmer\":true,\"age\":27}");
+            final JjsonObject ofString = JjsonObject.ofString("{\"id\":\"bardiademon\",\"name\":\"Bardia Namjoo\",\"programmer\":true,\"age\":27}");
         } catch (JjsonException e) {
             throw new RuntimeException(e);
         }
@@ -110,7 +110,7 @@ public class JjsonObjectTest {
     public static void main(String[] args) {
 
         try {
-            final JjsonObject fromString = JjsonObject.fromString("{\n" +
+            final JjsonObject ofString = JjsonObject.ofString("{\n" +
                     "  \"id\": \"bardiademon\",\n" +
                     "  \"name\": \"Bardia Namjoo\",\n" +
                     "  \"programmer\": true,\n" +
@@ -133,7 +133,7 @@ public class JjsonArrayTest {
 
         Logger.disableLog(false);
 
-        final var jjsonArray = JjsonArray.fromString("""
+        final var jjsonArray = JjsonArray.ofString("""
                 [1,5,4.56,"Hi, I'm bardiademon\tJava Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]
                 """);
 
@@ -148,7 +148,7 @@ public class JjsonArrayTest {
 
         builder.put(5);
         builder.put("New String");
-        builder.put(JjsonObject.fromJjsonObject(getter.getJjsonObject(8)));
+        builder.put(JjsonObject.ofJjsonObject(getter.getJjsonObject(8)));
         builder.put(0, getter.getInteger(0) + getter.getInteger(0));
         builder.put(8, getter.getJjsonObject(8).getString("name"));
 
