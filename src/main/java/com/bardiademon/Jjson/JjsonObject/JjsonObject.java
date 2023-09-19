@@ -1,18 +1,21 @@
 package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.JjsonFileWriter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
 import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.converter.JjsonOf;
+import com.bardiademon.Jjson.util.JjsonWriteToFile;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.converter.JjsonObjectConverter;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.stream.Stream;
 
-public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, JjsonObjectGetter, JjsonObjectCollection, JjsonObjectStream {
+public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, JjsonObjectGetter, JjsonObjectCollection, JjsonObjectStream, JjsonFileWriter {
 
     private static final Logger logger = new Logger(JjsonObject.class);
 
@@ -23,15 +26,63 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
     public JjsonObject() {
     }
 
-    public static JjsonObject fromString(final String json) throws JjsonException {
-        return converter.fromString(json);
+    public static JjsonObject create() {
+        return new JjsonObject();
     }
 
-    public static JjsonObject fromJjsonObject(final JjsonObject jjsonObject) throws JjsonException {
+    public static JjsonObject ofJjsonObject(final JjsonObject jjsonObject) throws JjsonException {
         if (jjsonObject == null || jjsonObject.isEmpty()) {
-            return new JjsonObject();
+            return JjsonObject.create();
         }
-        return JjsonObject.fromString(jjsonObject.encode());
+        return ofString(jjsonObject.encode());
+    }
+
+    public static JjsonObject ofString(final String json) throws JjsonException {
+        return converter.ofString(json);
+    }
+
+    public static JjsonObject ofMap(final Map<?, ?> map) {
+        return converter.ofMap(map);
+    }
+
+    public static JjsonObject ofFile(final String path) throws JjsonException {
+        return JjsonOf.ofFile(path, JjsonObject::ofString);
+    }
+
+    public static JjsonObject ofFile(final String path, final Charset charset) throws JjsonException {
+        return JjsonOf.ofFile(path, charset, JjsonObject::ofString);
+    }
+
+    public static JjsonObject ofStream(final InputStream inputStream) throws JjsonException {
+        return JjsonOf.ofStream(inputStream, JjsonObject::ofString);
+    }
+
+    public static JjsonObject ofStream(final InputStream inputStream, final Charset charset) throws JjsonException {
+        return JjsonOf.ofStream(inputStream, charset, JjsonObject::ofString);
+    }
+
+    @Override
+    public JjsonObject putValue(final String key, final Object value) {
+        if (value instanceof final Integer val) put(key, val);
+        else if (value instanceof final Long val) put(key, val);
+        else if (value instanceof final Short val) put(key, val);
+        else if (value instanceof final Double val) put(key, val);
+        else if (value instanceof final Float val) put(key, val);
+        else if (value instanceof final String val) put(key, val);
+        else if (value instanceof final Boolean val) put(key, val);
+        else if (value instanceof final Number val) put(key, val);
+        else if (value instanceof final Object[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final int[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final long[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final short[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final float[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final double[] val) put(key, JjsonArray.ofArray(val));
+        else if (value instanceof final Collection<?> val) put(key, JjsonArray.ofCollection(val));
+        else if (value instanceof final Map<?, ?> val) put(key, JjsonObject.ofMap(val));
+        else if (value instanceof final JjsonObject val) put(key, val);
+        else if (value instanceof final JjsonArray val) put(key, val);
+        else put(key, value);
+        return this;
     }
 
     @Override
@@ -335,5 +386,19 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
     @Override
     public String toString() {
         return encode();
+    }
+
+    @Override
+    public void write(final String path, final boolean replace, final boolean formatter, final Charset charset) throws IOException {
+        JjsonWriteToFile.write(this, path, replace, formatter, charset);
+    }
+
+    @Override
+    public JjsonObject clone() {
+        try {
+            return JjsonObject.ofJjsonObject(this);
+        } catch (JjsonException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

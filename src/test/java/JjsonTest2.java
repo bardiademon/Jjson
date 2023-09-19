@@ -1,10 +1,12 @@
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 
-public class JjsonTest2 {
-    public static void main(String[] args) throws JjsonException {
+import java.io.IOException;
 
-        final JjsonObject jjsonObject = JjsonObject.fromString("""
+public class JjsonTest2 {
+    public static void main(String[] args) throws JjsonException, IOException {
+
+        final JjsonObject jjsonObject = JjsonObject.ofString("""
                 {
                     "statusCode": 400,
                     "message": [
@@ -25,6 +27,9 @@ public class JjsonTest2 {
 
         System.out.println(jjsonObject.encodeFormatter());
         System.out.println(slug.encodeFormatter());
+
+
+        jjsonObject.write("example/test-slug.json");
 
 
     }

@@ -5,7 +5,7 @@ public class JjsonTest4 {
     public static void main(String[] args) throws JjsonException {
 
 
-        JjsonObject jjsonObject = JjsonObject.fromString("{\n" +
+        JjsonObject jjsonObject = JjsonObject.ofString("{\n" +
                 "  \"name\": \"John Doe\",\n" +
                 "  \"age\": 30,\n" +
                 "  \"email\": \"johndoe@example.com\",\n" +

@@ -3,6 +3,8 @@ package com.bardiademon.Jjson.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 
 public interface JjsonArrayBuilder {
+    JjsonArrayBuilder putValue(final int index, final Object value);
+
     JjsonArrayBuilder put(final int index, final Object value);
 
     JjsonArrayBuilder put(final int index, final String value);
@@ -24,6 +26,8 @@ public interface JjsonArrayBuilder {
     JjsonArrayBuilder put(final int index, final JjsonObject jjsonObject);
 
     JjsonArrayBuilder put(final int index, final JjsonArray jjsonArray);
+
+    JjsonArrayBuilder putValue(final Object value);
 
     JjsonArrayBuilder put(final Object value);
 

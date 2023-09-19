@@ -1,13 +1,11 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.converter.JjsonObjectConverter;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 
 public final class JsonValidationTest {
 
     public static void main(final String[] args) throws JjsonException {
-        JjsonObject jjsonObject = new JjsonObjectConverter().fromString("""
+        JjsonObject jjsonObject = new JjsonObjectConverter().ofString("""
                 {
                 "number": 1,
                                  "glossary": {
@@ -42,7 +40,7 @@ public final class JsonValidationTest {
         System.out.println("title = " + title);
 
 
-        final JjsonObject jjsonArray = JjsonObject.fromString("""
+        final JjsonObject jjsonArray = JjsonObject.ofString("""
                {"name": {"test":2},"array" : [1,4,7]}
                 """);
 

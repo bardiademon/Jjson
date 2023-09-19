@@ -6,7 +6,10 @@ import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class JjsonObjectConverter extends JjsonConverter {
 
@@ -15,7 +18,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
     public JjsonObjectConverter() {
     }
 
-    public JjsonObject fromString(String json) throws JjsonException {
+    public JjsonObject ofString(String json) throws JjsonException {
         try {
             logger.trace("from string: {}", json);
 
@@ -29,7 +32,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
             }
 
             if (isEmpty(json, '{', '}')) {
-                return new JjsonObject();
+                return JjsonObject.create();
             }
 
             final char[] jsonChars = json.toCharArray();
@@ -60,8 +63,8 @@ public final class JjsonObjectConverter extends JjsonConverter {
                     case NUMBER -> jjsonObject.put(key, (Number) value);
                     case STRING -> jjsonObject.put(key, (String) value);
                     case BOOLEAN -> jjsonObject.put(key, (boolean) value);
-                    case JSON_OBJECT -> jjsonObject.put(key, fromString((String) value));
-                    case JSON_ARRAY -> jjsonObject.put(key, arrayMapper.fromString((String) value));
+                    case JSON_OBJECT -> jjsonObject.put(key, ofString((String) value));
+                    case JSON_ARRAY -> jjsonObject.put(key, arrayMapper.ofString((String) value));
                 }
 
                 index = eoj(jsonChars, index, '}');
@@ -70,9 +73,10 @@ public final class JjsonObjectConverter extends JjsonConverter {
             return jjsonObject;
 
 
-        } catch (JjsonException | Exception jjsonException) {
-            logger.error("Fail to validation json: {}", json, jjsonException);
-            throw jjsonException;
+        } catch (Exception e) {
+            logger.error("Fail to validation json: {}", json, e);
+            if (e instanceof JjsonException) throw e;
+            else throw new JjsonException(e);
         }
     }
 
@@ -167,4 +171,42 @@ public final class JjsonObjectConverter extends JjsonConverter {
         return jsonString.toString();
     }
 
+    public JjsonObject ofMap(final Map<?, ?> map) {
+
+        final JjsonObject jjsonObject = JjsonObject.create();
+
+        if (map == null || map.isEmpty()) {
+            return jjsonObject;
+        }
+
+        final JjsonArrayConverter arrayConverter = new JjsonArrayConverter();
+
+        for (final Object keyObj : map.keySet()) {
+            if (keyObj == null) continue;
+            final String key = keyObj.toString();
+            final Object valueObj = map.get(key);
+
+            if (valueObj instanceof final Map<?, ?> value) {
+                jjsonObject.put(key, ofMap(value));
+            } else if (valueObj instanceof final Collection<?> value) {
+                jjsonObject.put(key, arrayConverter.ofCollection(value));
+            } else if (valueObj instanceof final Object[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else if (valueObj instanceof final int[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else if (valueObj instanceof final long[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else if (valueObj instanceof final short[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else if (valueObj instanceof final double[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else if (valueObj instanceof final float[] value) {
+                jjsonObject.put(key, arrayConverter.ofArray(value));
+            } else {
+                jjsonObject.putValue(key, valueObj);
+            }
+        }
+
+        return jjsonObject;
+    }
 }

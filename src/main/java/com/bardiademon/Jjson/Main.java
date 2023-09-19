@@ -26,7 +26,7 @@ public class Main {
         System.out.println("Iranian years = " + yyyy);
 
 
-        final JjsonArray jjsonArray = JjsonArray.fromString("""
+        final JjsonArray jjsonArray = JjsonArray.ofString("""
                 ["bardiademon","Bardia Namjoo","bardiademon@gmail.com",25062555,true]
                 """);
 

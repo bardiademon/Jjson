@@ -4,7 +4,7 @@ import com.bardiademon.Jjson.data.exception.JjsonException;
 public final class JjsonTest {
     public static void main(final String[] args) throws JjsonException {
 
-        final JjsonObject jjsonObject = JjsonObject.fromString("{\n" +
+        final JjsonObject jjsonObject = JjsonObject.ofString("{\n" +
                 "  \"person\": {\n" +
                 "    \"name\": \"John Doe\",\n" +
                 "    \"age\": 30,\n" +

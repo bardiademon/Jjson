@@ -11,7 +11,7 @@ public class JjsonArrayTest {
 
         Logger.disableLog(false);
 
-        final var jjsonArray = JjsonArray.fromString("""
+        final var jjsonArray = JjsonArray.ofString("""
                 [1,5,4.56,"Hi, I'm bardiademon\tJava Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]
                 """);
 
@@ -26,7 +26,7 @@ public class JjsonArrayTest {
 
         builder.put(5);
         builder.put("New String");
-        builder.put(JjsonObject.fromJjsonObject(getter.getJjsonObject(8)));
+        builder.put(JjsonObject.ofJjsonObject(getter.getJjsonObject(8)));
         builder.put(0, getter.getInteger(0) + getter.getInteger(0));
         builder.put(8, getter.getJjsonObject(8).getString("name"));
 

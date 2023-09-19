@@ -28,7 +28,7 @@ Maven
 <dependency>
     <groupId>com.bardiademon</groupId>
     <artifactId>Jjson</artifactId>
-    <version>1.0.1</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -179,6 +179,72 @@ number.intValue() = 5
 ```text
 string = DEFAULT VALUE
 aBoolean = true
+```
+
+Json of File/Stream
+-----
+
+```java
+public class JjsonTest {
+    public static void main(String[] args) throws JjsonException, IOException {
+        JjsonArray.ofFile("path");
+        JjsonObject.ofFile("path");
+
+        JjsonArray.ofStream(new FileInputStream("path"));
+        JjsonObject.ofStream(new FileInputStream("path"));
+    }
+}
+```
+
+Json Write to file
+-----
+
+```java
+public class JjsonTest {
+    public static void main(String[] args) throws JjsonException, IOException {
+        final JjsonObject jjsonObject = new JjsonObject();
+        jjsonObject.put("id", "bardiademon");
+        jjsonObject.put("name", "Bardia Namjoo");
+        jjsonObject.put("programmer", true);
+        jjsonObject.put("age", 27);
+
+        jjsonObject.write("path");
+
+        JjsonArray.create()
+                .put(5)
+                .put(3)
+                .put(8)
+                .write("path");
+    }
+}
+```
+
+Json Of Array/Collection/Map
+-----
+
+```java
+import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+
+import java.util.List;
+
+public class JjsonTest {
+    public static void main(String[] args) throws JjsonException, IOException {
+
+        JjsonArray.ofCollection(Set.of(5L, 87L, 2L, 3L, 1L, 6L, 465L, 4L, 89L));
+        JjsonArray.ofCollection(List.of(5L, 87L, 2L, 3L, 1L, 6L, 465L, 4L, 89L));
+        JjsonArray.ofArray(new int[]{1, 23, 63, 54, 6, 755});
+        JjsonArray.ofArray(new short[]{1, 23, 63, 54, 6, 755});
+        JjsonArray.ofArray(new float[]{1.5F, 5, 4});
+
+        final HashMap<Object, Object> hashMap = new HashMap<>();
+        hashMap.put("id", "bardiademon");
+        hashMap.put("firstname", "Bardia");
+        hashMap.put("lastname", "Namjoo");
+        
+        JjsonObject.ofMap(hashMap);
+    }
+}
 ```
 
 <h1 align="center">

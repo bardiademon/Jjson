@@ -17,7 +17,7 @@ public class JjsonObjectTest {
         System.out.println("Encode formatter: " + encodeFormatter);
 
         try {
-            final JjsonObject fromString = JjsonObject.fromString("{\n" +
+            final JjsonObject fromString = JjsonObject.ofString("{\n" +
                     "  \"id\": \"bardiademon\",\n" +
                     "  \"name\": \"Bardia Namjoo\",\n" +
                     "  \"programmer\": true,\n" +

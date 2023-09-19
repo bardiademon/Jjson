@@ -1,0 +1,24 @@
+[
+  {
+    "ID": "bardiademon",
+    "firstname": "Bardia",
+    "lastname": "Namjoo",
+    "E-Mail": "bardiademon@gmail.com",
+    "bio": "Hi\nI'm bardiademon\nI'm Java Programmer",
+    "phone": 9114907854,
+    "contact": [
+      {
+        "name": "Telegram",
+        "id": "bardiademon"
+      },
+      {
+        "name": "Instagram",
+        "id": "bardianamjoo"
+      },
+      {
+        "name": "Whatsapp",
+        "id": "+989114907854"
+      }
+    ]
+  }
+]

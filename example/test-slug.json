@@ -1,0 +1,1 @@
+{"statusCode":400,"message":[{"field":"price.0","code":"VALIDATION_IS_NUMBER"}],"test":[{"slug":"asd"}],"test1":[[{"slug":"slug"}]]}

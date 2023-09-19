@@ -3,6 +3,8 @@ package com.bardiademon.Jjson.JjsonObject;
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 
 public interface JjsonObjectBuilder {
+    JjsonObjectBuilder putValue(final String key, final Object value);
+
     JjsonObjectBuilder put(final String key, final Object value);
 
     JjsonObjectBuilder put(final String key, final String value);

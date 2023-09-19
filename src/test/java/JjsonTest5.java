@@ -7,7 +7,7 @@ public class JjsonTest5 {
 
         Logger.disableLog(true);
 
-        final JjsonObject jjsonObject = JjsonObject.fromString("""
+        final JjsonObject jjsonObject = JjsonObject.ofString("""
                 {
                   "nam\re": "bardiademon\n\n",
                   "score": -45.6,

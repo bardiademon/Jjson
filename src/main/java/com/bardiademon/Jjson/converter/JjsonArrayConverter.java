@@ -6,7 +6,7 @@ import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class JjsonArrayConverter extends JjsonConverter {
@@ -16,7 +16,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
     public JjsonArrayConverter() {
     }
 
-    public JjsonArray fromString(String json) throws JjsonException {
+    public JjsonArray ofString(String json) throws JjsonException {
 
         logger.trace("from string: {}", json);
 
@@ -30,7 +30,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
         }
 
         if (isEmpty(json, '[', ']')) {
-            return new JjsonArray();
+            return JjsonArray.create();
         }
 
         final char[] jsonChars = json.toCharArray();
@@ -54,8 +54,8 @@ public final class JjsonArrayConverter extends JjsonConverter {
                 case NUMBER -> jjsonArray.put((Number) value);
                 case STRING -> jjsonArray.put((String) value);
                 case BOOLEAN -> jjsonArray.put((boolean) value);
-                case JSON_OBJECT -> jjsonArray.put(jjsonObjectConverter.fromString((String) value));
-                case JSON_ARRAY -> jjsonArray.put(fromString((String) value));
+                case JSON_OBJECT -> jjsonArray.put(jjsonObjectConverter.ofString((String) value));
+                case JSON_ARRAY -> jjsonArray.put(ofString((String) value));
             }
 
             index = eoj(jsonChars, index, ']');
@@ -125,4 +125,90 @@ public final class JjsonArrayConverter extends JjsonConverter {
         return jsonString.toString();
 
     }
+
+    public JjsonArray ofCollection(final Collection<?> collection) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (collection == null || collection.isEmpty()) {
+            return jjsonArray;
+        }
+
+        final JjsonObjectConverter jjsonConverter = new JjsonObjectConverter();
+
+        for (final Object itemObj : collection) {
+            if (itemObj instanceof final Map<?, ?> value) {
+                jjsonArray.put(jjsonConverter.ofMap(value));
+            } else if (itemObj instanceof final Collection<?> value) {
+                jjsonArray.put(ofCollection(value));
+            } else if (itemObj instanceof final Object[] value) {
+                jjsonArray.put(ofArray(value));
+            } else if (itemObj instanceof final int[] value) {
+                jjsonArray.put(ofArray(value));
+            } else if (itemObj instanceof final long[] value) {
+                jjsonArray.put(ofArray(value));
+            } else if (itemObj instanceof final short[] value) {
+                jjsonArray.put(ofArray(value));
+            } else if (itemObj instanceof final double[] value) {
+                jjsonArray.put(ofArray(value));
+            } else if (itemObj instanceof final float[] value) {
+                jjsonArray.put(ofArray(value));
+            } else {
+                jjsonArray.putValue(itemObj);
+            }
+        }
+        return jjsonArray;
+    }
+
+    public <T> JjsonArray ofArray(final T[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        return ofCollection(Arrays.stream(array).toList());
+    }
+
+    public JjsonArray ofArray(final int[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        return ofCollection(Arrays.stream(array).boxed().toList());
+    }
+
+    public JjsonArray ofArray(final long[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        return ofCollection(Arrays.stream(array).boxed().toList());
+    }
+
+    public JjsonArray ofArray(final short[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        final List<Short> shorts = new ArrayList<>();
+        for (final short item : array) shorts.add(item);
+        return ofCollection(shorts);
+    }
+
+    public JjsonArray ofArray(final double[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        return ofCollection(Arrays.stream(array).boxed().toList());
+    }
+
+    public JjsonArray ofArray(final float[] array) {
+        final JjsonArray jjsonArray = JjsonArray.create();
+        if (array == null || array.length == 0) {
+            return jjsonArray;
+        }
+        final List<Float> shorts = new ArrayList<>();
+        for (final float item : array) shorts.add(item);
+        return ofCollection(shorts);
+    }
+
+
 }
