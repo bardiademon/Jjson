@@ -17,7 +17,7 @@ Maven
 <repositories>
     <repository>
         <id>bardiademon-repository</id>
-        <url>https://bardiademon.com/repository</url>
+        <url>https://repository.bardiademon.com/</url>
     </repository>
 </repositories>
 ```
