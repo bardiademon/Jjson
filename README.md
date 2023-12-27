@@ -251,11 +251,9 @@ public class JjsonTest {
     💻 Technologies
 </h1>
 
-<p align="center">
-  <a href="https://dev.java">
-    <img src="https://skillicons.dev/icons?i=java"  alt="Java"/>
-  </a>
-</p>
+<div align="center">
+    <img src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" alt="Java"/>
+</div>
 
 <h1 align="center">
     🌟 Spread the word!
