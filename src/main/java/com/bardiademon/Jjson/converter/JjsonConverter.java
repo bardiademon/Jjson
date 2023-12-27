@@ -4,17 +4,20 @@ import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final Logger logger = new Logger(JjsonConverter.class);
 
-    private static final String BN = "##BN##";
-    private static final String BR = "##BR##";
-    private static final String BT = "##BT##";
-    private static final String BF = "##BF##";
-    private static final String BB = "##BB##";
+    private static final String BN = "#@BN@#"; // \n
+    private static final String BR = "#@BR@#"; // \r
+    private static final String BT = "#@BT@#"; // \t
+    private static final String BF = "#@BF@#"; // \f
+    private static final String BB = "#@BB@#"; // \b
 
     protected int getCloseJsonValueString(final char[] jsonChars, final char open, final char close, final int start) {
         int number = 1;
@@ -209,6 +212,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     }
 
     public String stringFormatter(final String str) {
+
         if (str == null) {
             return null;
         }
@@ -217,11 +221,62 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         }
 
 //        '\"', '\'', '\n', '\r', '\t', '\b', '\f', '\\'
-        return str.replaceAll("\n", BN)
-                .replaceAll("\r", BR)
-                .replaceAll("\t", BT)
-                .replaceAll("\f", BF)
-                .replaceAll("\b", BB);
+        final Reader reader = new StringReader(str);
+
+        try {
+            final StringBuilder builder = new StringBuilder();
+            int aChar;
+            boolean backSlash = false;
+            while ((aChar = reader.read()) != -1) {
+
+                if (!backSlash && (char) aChar == '\\') {
+                    backSlash = true;
+                    continue;
+                }
+
+                if (backSlash) {
+                    switch ((char) aChar) {
+                        case 'n' -> {
+                            builder.append(BN);
+                            backSlash = false;
+                            continue;
+                        }
+                        case 'r' -> {
+                            builder.append(BR);
+                            backSlash = false;
+                            continue;
+                        }
+                        case 't' -> {
+                            builder.append(BT);
+                            backSlash = false;
+                            continue;
+                        }
+                        case 'f' -> {
+                            builder.append(BF);
+                            backSlash = false;
+                            continue;
+                        }
+                        case 'b' -> {
+                            builder.append(BB);
+                            backSlash = false;
+                            continue;
+                        }
+                        default -> {
+                            builder.append("\\");
+                            backSlash = false;
+                        }
+                    }
+                }
+
+                builder.append((char) aChar);
+
+            }
+            return builder.toString();
+
+        } catch (IOException e) {
+            logger.error("Fail to render string, String: {}", str, e);
+            return str;
+        }
     }
 
     public String stringFormatterReverse(final String str) {

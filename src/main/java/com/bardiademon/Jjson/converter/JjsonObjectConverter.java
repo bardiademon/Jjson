@@ -20,6 +20,11 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
     public JjsonObject ofString(String json) throws JjsonException {
         try {
+
+            if (json == null || json.isEmpty()) {
+                throw new JjsonException("Json is null");
+            }
+
             logger.trace("from string: {}", json);
 
             json = json.trim();

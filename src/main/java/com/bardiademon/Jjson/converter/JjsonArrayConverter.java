@@ -17,53 +17,64 @@ public final class JjsonArrayConverter extends JjsonConverter {
     }
 
     public JjsonArray ofString(String json) throws JjsonException {
+        try {
 
-        logger.trace("from string: {}", json);
-
-        json = json.trim();
-
-        if (!json.startsWith("[")) {
-            throw new JjsonException("Json array must with [ start", 0);
-        }
-        if (!json.endsWith("]")) {
-            throw new JjsonException("Json array must with ] end", json.length() - 1);
-        }
-
-        if (isEmpty(json, '[', ']')) {
-            return JjsonArray.create();
-        }
-
-        final char[] jsonChars = json.toCharArray();
-
-        int index = 1;
-
-        final JjsonArray jjsonArray = new JjsonArray();
-        final JjsonObjectConverter jjsonObjectConverter = new JjsonObjectConverter();
-
-        do {
-            final Object[] findFirst = findCharWithoutSpace(jsonChars, index);
-
-            final Object[] valueIndex = getValue(findFirst, json, jsonChars, index);
-            index = (int) valueIndex[0];
-
-            final JsonValueType valueType = (JsonValueType) valueIndex[2];
-            final Object value = valueIndex[1];
-
-            switch (valueType) {
-                case NULL -> jjsonArray.put((Object) null);
-                case NUMBER -> jjsonArray.put((Number) value);
-                case STRING -> jjsonArray.put((String) value);
-                case BOOLEAN -> jjsonArray.put((boolean) value);
-                case JSON_OBJECT -> jjsonArray.put(jjsonObjectConverter.ofString((String) value));
-                case JSON_ARRAY -> jjsonArray.put(ofString((String) value));
+            if (json == null || json.isEmpty()) {
+                throw new JjsonException("Json is null");
             }
 
-            index = eoj(jsonChars, index, ']');
-        } while (index >= 0);
+            logger.trace("from string: {}", json);
 
-        logger.trace("Successfully mapped json array: {}", jjsonArray.encode());
+            json = json.trim();
 
-        return jjsonArray;
+            if (!json.startsWith("[")) {
+                throw new JjsonException("Json array must with [ start", 0);
+            }
+            if (!json.endsWith("]")) {
+                throw new JjsonException("Json array must with ] end", json.length() - 1);
+            }
+
+            if (isEmpty(json, '[', ']')) {
+                return JjsonArray.create();
+            }
+
+            final char[] jsonChars = json.toCharArray();
+
+            int index = 1;
+
+            final JjsonArray jjsonArray = new JjsonArray();
+            final JjsonObjectConverter jjsonObjectConverter = new JjsonObjectConverter();
+
+            do {
+                final Object[] findFirst = findCharWithoutSpace(jsonChars, index);
+
+                final Object[] valueIndex = getValue(findFirst, json, jsonChars, index);
+                index = (int) valueIndex[0];
+
+                final JsonValueType valueType = (JsonValueType) valueIndex[2];
+                final Object value = valueIndex[1];
+
+                switch (valueType) {
+                    case NULL -> jjsonArray.put((Object) null);
+                    case NUMBER -> jjsonArray.put((Number) value);
+                    case STRING -> jjsonArray.put((String) value);
+                    case BOOLEAN -> jjsonArray.put((boolean) value);
+                    case JSON_OBJECT -> jjsonArray.put(jjsonObjectConverter.ofString((String) value));
+                    case JSON_ARRAY -> jjsonArray.put(ofString((String) value));
+                }
+
+                index = eoj(jsonChars, index, ']');
+            } while (index >= 0);
+
+            logger.trace("Successfully mapped json array: {}", jjsonArray.encode());
+
+            return jjsonArray;
+
+        } catch (Exception e) {
+            logger.error("Fail to validation json: {}", json, e);
+            if (e instanceof JjsonException) throw e;
+            else throw new JjsonException(e);
+        }
     }
 
 
