@@ -5,26 +5,24 @@ It is a library for managing, generating and working with Json, which is built w
 Java version
 -----
 
-This library was built for Java 17, the latest LTS. 
+This library was built for Java 17, the latest LTS.
 [Click to download](https://dev.java)
+-----
 
 Maven
 -----
+[Download Maven](https://maven.apache.org/download.cgi)
 
-* Step 1. Add the bardiademon-repository to your build file
+* Step 1. Install the Jjson JAR file
 
-```xml
-<repositories>
-    <repository>
-        <id>bardiademon-repository</id>
-        <url>https://repository.bardiademon.com/</url>
-    </repository>
-</repositories>
+```bash
+mvn clean install package install:install-file -Dfile='target/Jjson-2.1.0.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='2.1.0' -Dpackaging=jar
 ```
 
 * Step 2. Add the dependency
 
 ```xml
+
 <dependency>
     <groupId>com.bardiademon</groupId>
     <artifactId>Jjson</artifactId>
@@ -76,7 +74,12 @@ public class JjsonObjectTest {
 output
 
 ```json
-{"id": "bardiademon","name": "Bardia Namjoo","programmer": true,"age": 27}
+{
+  "id": "bardiademon",
+  "name": "Bardia Namjoo",
+  "programmer": true,
+  "age": 27
+}
 ```
 
 ```json
@@ -168,14 +171,76 @@ public class JjsonArrayTest {
 output
 
 ```json
-[1,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]
+[
+  1,
+  5,
+  4.56,
+  "Hi, I'm bardiademon	Java Programmer",
+  true,
+  null,
+  {},
+  [],
+  {
+    "name": "bardiademon"
+  },
+  [
+    "Bardia Namjoo"
+  ],
+  [
+    {}
+  ],
+  [
+    [
+      {}
+    ]
+  ],
+  {
+    "test": [
+      {}
+    ]
+  }
+]
 ```
+
 ```text
 number.intValue() = 5
 ```
+
 ```json
-[2,5,4.56,"Hi, I'm bardiademon	Java Programmer",true,null,{},[],"bardiademon",["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]},5,"New String",{"name":"bardiademon"}]
+[
+  2,
+  5,
+  4.56,
+  "Hi, I'm bardiademon	Java Programmer",
+  true,
+  null,
+  {},
+  [],
+  "bardiademon",
+  [
+    "Bardia Namjoo"
+  ],
+  [
+    {}
+  ],
+  [
+    [
+      {}
+    ]
+  ],
+  {
+    "test": [
+      {}
+    ]
+  },
+  5,
+  "New String",
+  {
+    "name": "bardiademon"
+  }
+]
 ```
+
 ```text
 string = DEFAULT VALUE
 aBoolean = true
@@ -241,7 +306,7 @@ public class JjsonTest {
         hashMap.put("id", "bardiademon");
         hashMap.put("firstname", "Bardia");
         hashMap.put("lastname", "Namjoo");
-        
+
         JjsonObject.ofMap(hashMap);
     }
 }
