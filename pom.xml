@@ -22,6 +22,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.validation>VERBOSE</maven.plugin.validation>
+        <output.directory>${project.basedir}/releases</output.directory>
+        <jar.final.name>bardiademon.Jjson-${project.version}</jar.final.name>
     </properties>
 
     <distributionManagement>
@@ -45,6 +47,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.1.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <finalName>${jar.final.name}</finalName>
+                    <outputDirectory>${output.directory}</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
 

@@ -9,17 +9,29 @@ This library was built for Java 17, the latest LTS.
 [Click to download](https://dev.java)
 -----
 
-Maven
+Install
 -----
 [Download Maven](https://maven.apache.org/download.cgi)
 
-* Step 1. Install the Jjson JAR file
+* Step 1. Download The Jjson JAR file
 
 ```bash
-mvn clean install package install:install-file -Dfile='target/Jjson-2.1.0.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='2.1.0' -Dpackaging=jar
+curl -L -o 'releases/bardiademon.Jjson-2.1.0.jar' https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-2.1.0.jar
 ```
 
-* Step 2. Add the dependency
+OR
+
+```bash
+git clone https://github.com/bardiademon/Jjson
+```
+
+* Step 2. Install the Jjson JAR file
+
+```bash
+mvn clean install package install:install-file -Dfile='releases/bardiademon.Jjson-2.1.0.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='2.1.0' -Dpackaging=jar
+```
+
+* Step 3. Add the dependency
 
 ```xml
 
