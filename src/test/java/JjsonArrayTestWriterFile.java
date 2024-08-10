@@ -1,8 +1,7 @@
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonFileWriter;
+import com.bardiademon.Jjson.io.JjsonFileWriter;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.data.exception.JjsonException;
-import com.bardiademon.Jjson.util.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;

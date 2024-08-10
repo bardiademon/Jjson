@@ -5,7 +5,7 @@ import com.bardiademon.Jjson.data.exception.JjsonException;
 public final class JsonValidationTest {
 
     public static void main(final String[] args) throws JjsonException {
-        JjsonObject jjsonObject = new JjsonObjectConverter().ofString("""
+        JjsonObject jjsonObject = JjsonObjectConverter.converter().ofString("""
                 {
                 "number": 1,
                                  "glossary": {

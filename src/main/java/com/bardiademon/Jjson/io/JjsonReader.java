@@ -1,6 +1,5 @@
 package com.bardiademon.Jjson.converter;
 
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 
@@ -8,18 +7,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Map;
 
-public interface JjsonOf {
-    Logger logger = new Logger(JjsonOf.class);
+public final class JjsonReader {
 
-    static <T> T ofFile(final String path, final OnString<T> onString) throws JjsonException {
-        return ofFile(path, StandardCharsets.UTF_8, onString);
+    private static final Logger logger = new Logger(JjsonReader.class);
+
+    private JjsonReader() {
     }
 
-    static <T> T ofFile(final String path, Charset charset, final OnString<T> onString) throws JjsonException {
+    public static <T> T ofFile(final String path, final OnString<T> onString) throws JjsonException {
+        return ofFile(path, JjsonCharset.getCharset(), onString);
+    }
+
+    public static <T> T ofFile(final String path, Charset charset, final OnString<T> onString) throws JjsonException {
         if (path == null || path.trim().isEmpty()) {
             logger.error("Path is null");
             throw new JjsonException("Path is null");
@@ -37,11 +38,11 @@ public interface JjsonOf {
         }
     }
 
-    static <T> T ofStream(final InputStream inputStream, final OnString<T> onString) throws JjsonException {
-        return ofStream(inputStream, StandardCharsets.UTF_8, onString);
+    public static <T> T ofStream(final InputStream inputStream, final OnString<T> onString) throws JjsonException {
+        return ofStream(inputStream, JjsonCharset.getCharset(), onString);
     }
 
-    static <T> T ofStream(final InputStream inputStream, final Charset charset, final OnString<T> onString) throws JjsonException {
+    public static <T> T ofStream(final InputStream inputStream, final Charset charset, final OnString<T> onString) throws JjsonException {
         try {
             if (inputStream == null) {
                 logger.error("Invalid stream");
@@ -54,7 +55,7 @@ public interface JjsonOf {
         }
     }
 
-    interface OnString<T> {
+    public interface OnString<T> {
         T on(final String value) throws JjsonException;
     }
 

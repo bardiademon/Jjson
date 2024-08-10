@@ -1,5 +1,5 @@
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonArray.JjsonArrayBuilder;
+import com.bardiademon.Jjson.JjsonArray.JjsonArrayPut;
 import com.bardiademon.Jjson.JjsonArray.JjsonArrayGetter;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
@@ -16,7 +16,7 @@ public class JjsonArrayTest {
                 """);
 
         final var getter = (JjsonArrayGetter) jjsonArray;
-        final var builder = (JjsonArrayBuilder) jjsonArray;
+        final var builder = (JjsonArrayPut) jjsonArray;
         final var encoder = (JjsonEncoder) jjsonArray;
 
         System.out.println(jjsonArray.encode());

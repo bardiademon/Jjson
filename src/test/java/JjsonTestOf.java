@@ -46,18 +46,18 @@ public class JjsonTestOf {
         listObj.add(new int[]{1, 2, 6, 65, 98, 5, 4, 56});
         listObj.add(new float[]{1.6F, 12.6F, 3.14F});
         listObj.add(new Object[]{new float[]{1.5F}, 5, 4});
-        listObj.add(JjsonArray.create().put("45").putValue(JjsonObject.create().putValue("name", "bardia")));
+        listObj.add(JjsonArray.create().put("45").put(JjsonObject.create().put("name", "bardia")));
         listObj.add(Set.of(1, 5, 6, "Bardia"));
         listObj.add(List.of(1, 56, 64, 6548, 6354, 6485, 3.14F, 45645L, List.of(1, 2, 3, 6), JjsonObject.ofMap(map)));
 
         final JjsonArray jjsonArray = JjsonArray.ofCollection(listObj);
 
-        jjsonArray.putValue(new int[]{1, 32, 3, 6, 4, 69, 6, 4, 6});
+        jjsonArray.put(new int[]{1, 32, 3, 6, 4, 69, 6, 4, 6});
         final JjsonArray arrInt = (JjsonArray) jjsonArray.getObject(8);
         System.out.println("arrInt = " + arrInt);
 
-        jjsonArray.putValue(Map.of("Name", "Bardia"));
-        jjsonArray.putValue(JjsonObject.create().putValue("id", "bardiademon").putValue("arr", new int[]{1, 2, 3, 65, 8}));
+        jjsonArray.put(Map.of("Name", "Bardia"));
+        jjsonArray.put(JjsonObject.create().put("id", "bardiademon").put("arr", new int[]{1, 2, 3, 65, 8}));
 
         jjsonArray.put(JjsonObject.ofMap(map));
 
