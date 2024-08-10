@@ -6,16 +6,23 @@ import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class JjsonObjectConverter extends JjsonConverter {
 
     private static final Logger logger = new Logger(JjsonObjectConverter.class);
 
-    public JjsonObjectConverter() {
+    private static JjsonObjectConverter converter;
+
+    private JjsonObjectConverter() {
+    }
+
+    public static JjsonObjectConverter converter() {
+        if (converter == null) {
+            converter = new JjsonObjectConverter();
+        }
+        return converter;
     }
 
     public JjsonObject ofString(String json) throws JjsonException {
@@ -45,7 +52,6 @@ public final class JjsonObjectConverter extends JjsonConverter {
             int index = 1;
 
             final JjsonObject jjsonObject = new JjsonObject();
-            final JjsonArrayConverter arrayMapper = new JjsonArrayConverter();
 
             final Object[] eoj = findCharWithoutSpace(jsonChars, 1);
             if (eoj != null && ((char) eoj[1]) == '}') {
@@ -69,7 +75,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
                     case STRING -> jjsonObject.put(key, (String) value);
                     case BOOLEAN -> jjsonObject.put(key, (boolean) value);
                     case JSON_OBJECT -> jjsonObject.put(key, ofString((String) value));
-                    case JSON_ARRAY -> jjsonObject.put(key, arrayMapper.ofString((String) value));
+                    case JSON_ARRAY -> jjsonObject.put(key, JjsonArrayConverter.converter().ofString((String) value));
                 }
 
                 index = eoj(jsonChars, index, '}');
@@ -112,7 +118,6 @@ public final class JjsonObjectConverter extends JjsonConverter {
     public String encode(final JjsonObject jjsonObject) {
 
         final StringBuilder jsonString = new StringBuilder("{");
-        final JjsonArrayConverter arrayConverter = new JjsonArrayConverter();
 
         final List<String> keys = jjsonObject.keys();
         for (int i = 0; i < keys.size(); i++) {
@@ -126,7 +131,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encode(value));
             } else if (object instanceof final JjsonArray value) {
-                jsonString.append(arrayConverter.encode(value));
+                jsonString.append(JjsonArrayConverter.converter().encode(value));
             } else {
                 jsonString.append(object);
             }
@@ -148,8 +153,6 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
         final StringBuilder jsonString = new StringBuilder("{").append("\n").append(space(numberOfSpace));
 
-        final JjsonArrayConverter arrayConverter = new JjsonArrayConverter();
-
         final List<String> keys = jjsonObject.keys();
         for (int i = 0; i < keys.size(); i++) {
             final String key = keys.get(i);
@@ -162,7 +165,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encodeFormatter(value, numberOfSpace + 1));
             } else if (object instanceof final JjsonArray value) {
-                jsonString.append(arrayConverter.encodeFormatter(value, numberOfSpace + 1));
+                jsonString.append(JjsonArrayConverter.converter().encodeFormatter(value, numberOfSpace + 1));
             } else {
                 jsonString.append(object);
             }
@@ -184,34 +187,15 @@ public final class JjsonObjectConverter extends JjsonConverter {
             return jjsonObject;
         }
 
-        final JjsonArrayConverter arrayConverter = new JjsonArrayConverter();
-
         for (final Object keyObj : map.keySet()) {
             if (keyObj == null) continue;
             final String key = keyObj.toString();
             final Object valueObj = map.get(key);
+            jjsonObject.put(key, valueObj);
 
-            if (valueObj instanceof final Map<?, ?> value) {
-                jjsonObject.put(key, ofMap(value));
-            } else if (valueObj instanceof final Collection<?> value) {
-                jjsonObject.put(key, arrayConverter.ofCollection(value));
-            } else if (valueObj instanceof final Object[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else if (valueObj instanceof final int[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else if (valueObj instanceof final long[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else if (valueObj instanceof final short[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else if (valueObj instanceof final double[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else if (valueObj instanceof final float[] value) {
-                jjsonObject.put(key, arrayConverter.ofArray(value));
-            } else {
-                jjsonObject.putValue(key, valueObj);
-            }
         }
 
         return jjsonObject;
     }
+
 }

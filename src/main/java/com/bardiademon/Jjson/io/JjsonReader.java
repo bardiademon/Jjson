@@ -1,5 +1,6 @@
-package com.bardiademon.Jjson.converter;
+package com.bardiademon.Jjson.io;
 
+import com.bardiademon.Jjson.converter.JjsonCharset;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 

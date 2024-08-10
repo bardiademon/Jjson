@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson;
+package com.bardiademon.Jjson.io;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

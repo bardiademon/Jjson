@@ -1,5 +1,7 @@
 package com.bardiademon.Jjson.converter;
 
+import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.data.exception.JjsonException;
@@ -9,6 +11,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final Logger logger = new Logger(JjsonConverter.class);
@@ -180,8 +186,8 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
 
         return false;
     }
-    // end of json
 
+    // end of json
     protected int eoj(final char[] jsonChars, int index, final char closeChar) throws JjsonException {
         final Object[] findComma = findCharWithoutSpace(jsonChars, index);
         if (findComma == null) {
@@ -302,5 +308,33 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     protected String space(final int numberOfSpace) {
         if (numberOfSpace <= 0) return "";
         return "  ".repeat(numberOfSpace);
+    }
+
+    public <T> boolean isInvalidValue(final T value) {
+        return (value == null
+                || value instanceof String
+                || value instanceof Short
+                || value instanceof Integer
+                || value instanceof Long
+                || value instanceof Double
+                || value instanceof Float
+                || value instanceof Boolean
+
+                // Array
+                || value instanceof String[]
+                || value instanceof Short[] || value instanceof short[]
+                || value instanceof Integer[] || value instanceof int[]
+                || value instanceof Long[] || value instanceof long[]
+                || value instanceof Double[] || value instanceof double[]
+                || value instanceof Float[] || value instanceof float[]
+                || value instanceof Boolean[] || value instanceof boolean[]
+
+                // List
+                || value instanceof Collection<?>
+                || value instanceof Map<?, ?>
+
+                // Json
+                || value instanceof JjsonObject || value instanceof JjsonArray
+        );
     }
 }

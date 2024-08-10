@@ -1,11 +1,12 @@
 package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonFileWriter;
+import com.bardiademon.Jjson.io.JjsonFileWriter;
+import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
 import com.bardiademon.Jjson.data.exception.JjsonException;
-import com.bardiademon.Jjson.converter.JjsonOf;
-import com.bardiademon.Jjson.util.JjsonWriteToFile;
+import com.bardiademon.Jjson.io.JjsonReader;
+import com.bardiademon.Jjson.io.JjsonWriteToFile;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.converter.JjsonObjectConverter;
 
@@ -13,15 +14,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, JjsonObjectGetter, JjsonObjectCollection, JjsonObjectStream, JjsonFileWriter {
+public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObjectGetter, JjsonObjectCollection, JjsonObjectStream, JjsonFileWriter {
 
     private static final Logger logger = new Logger(JjsonObject.class);
 
     private final LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
-
-    private final static JjsonObjectConverter converter = new JjsonObjectConverter();
 
     public JjsonObject() {
     }
@@ -38,116 +38,56 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
     }
 
     public static JjsonObject ofString(final String json) throws JjsonException {
-        return converter.ofString(json);
+        return JjsonObjectConverter.converter().ofString(json);
     }
 
     public static JjsonObject ofMap(final Map<?, ?> map) {
-        return converter.ofMap(map);
+        return JjsonObjectConverter.converter().ofMap(map);
     }
 
     public static JjsonObject ofFile(final String path) throws JjsonException {
-        return JjsonOf.ofFile(path, JjsonObject::ofString);
+        return JjsonReader.ofFile(path, JjsonObject::ofString);
     }
 
     public static JjsonObject ofFile(final String path, final Charset charset) throws JjsonException {
-        return JjsonOf.ofFile(path, charset, JjsonObject::ofString);
+        return JjsonReader.ofFile(path, charset, JjsonObject::ofString);
     }
 
     public static JjsonObject ofStream(final InputStream inputStream) throws JjsonException {
-        return JjsonOf.ofStream(inputStream, JjsonObject::ofString);
+        return JjsonReader.ofStream(inputStream, JjsonObject::ofString);
     }
 
     public static JjsonObject ofStream(final InputStream inputStream, final Charset charset) throws JjsonException {
-        return JjsonOf.ofStream(inputStream, charset, JjsonObject::ofString);
+        return JjsonReader.ofStream(inputStream, charset, JjsonObject::ofString);
+    }
+
+    private <T> void putValue(final String key, final T value) {
+        jsonMap.put(JjsonObjectConverter.converter().stringFormatter(key), value instanceof final String strValue ? JjsonObjectConverter.converter().stringFormatter(strValue) : value);
     }
 
     @Override
-    public JjsonObject putValue(final String key, final Object value) {
-        if (value instanceof final Integer val) put(key, val);
-        else if (value instanceof final Long val) put(key, val);
-        else if (value instanceof final Short val) put(key, val);
-        else if (value instanceof final Double val) put(key, val);
-        else if (value instanceof final Float val) put(key, val);
-        else if (value instanceof final String val) put(key, val);
-        else if (value instanceof final Boolean val) put(key, val);
-        else if (value instanceof final Number val) put(key, val);
-        else if (value instanceof final Object[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final int[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final long[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final short[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final float[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final double[] val) put(key, JjsonArray.ofArray(val));
-        else if (value instanceof final Collection<?> val) put(key, JjsonArray.ofCollection(val));
-        else if (value instanceof final Map<?, ?> val) put(key, JjsonObject.ofMap(val));
-        else if (value instanceof final JjsonObject val) put(key, val);
-        else if (value instanceof final JjsonArray val) put(key, val);
-        else put(key, value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Object value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final String value) {
-        jsonMap.put(converter.stringFormatter(key), converter.stringFormatter(value));
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Number value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Long value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Integer value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Short value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Float value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Double value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final Boolean value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, final JjsonObject value) {
-        jsonMap.put(converter.stringFormatter(key), value);
-        return this;
-    }
-
-    @Override
-    public JjsonObject put(final String key, JjsonArray value) {
-        jsonMap.put(converter.stringFormatter(key), value);
+    public <T> JjsonObject put(final String key, final T value) {
+        if (JjsonArrayConverter.converter().isInvalidValue(value)) {
+            if (value instanceof final int[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final long[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final short[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final float[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final double[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final Object[] val) {
+                putValue(key, JjsonArray.ofArray(val));
+            } else if (value instanceof final Collection<?> val) {
+                putValue(key, JjsonArray.ofCollection(val));
+            } else if (value instanceof final Map<?, ?> val) {
+                putValue(key, JjsonObject.ofMap(val));
+            } else {
+                putValue(key, value);
+            }
+        }
         return this;
     }
 
@@ -248,8 +188,8 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
 
     @Override
     public Object getObject(final String key, final Object def) {
-        if (jsonMap.containsKey(converter.stringFormatter(key))) {
-            return jsonMap.get(converter.stringFormatter(key));
+        if (jsonMap.containsKey(JjsonObjectConverter.converter().stringFormatter(key))) {
+            return jsonMap.get(JjsonObjectConverter.converter().stringFormatter(key));
         }
         return def;
     }
@@ -257,7 +197,7 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
     @Override
     public String getString(final String key, final String def) {
         if (getObject(key) instanceof final String value) {
-            return converter.stringFormatterReverse(value);
+            return JjsonObjectConverter.converter().stringFormatterReverse(value);
         }
         return def;
     }
@@ -366,21 +306,17 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectBuilder, Jjso
 
     @Override
     public List<String> keys() {
-        final List<String> keys = new LinkedList<>();
-        for (final Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-            keys.add(converter.stringFormatterReverse(entry.getKey()));
-        }
-        return keys;
+        return jsonMap.keySet().stream().map(item -> JjsonObjectConverter.converter().stringFormatterReverse(item)).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
     public String encode() {
-        return converter.encode(this);
+        return JjsonObjectConverter.converter().encode(this);
     }
 
     @Override
     public String encodeFormatter() {
-        return converter.encodeFormatter(this);
+        return JjsonObjectConverter.converter().encodeFormatter(this);
     }
 
     @Override

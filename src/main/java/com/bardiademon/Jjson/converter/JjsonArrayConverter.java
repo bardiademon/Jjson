@@ -13,7 +13,16 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
     private static final Logger logger = new Logger(JjsonArrayConverter.class);
 
-    public JjsonArrayConverter() {
+    private static JjsonArrayConverter converter;
+
+    private JjsonArrayConverter() {
+    }
+
+    public static JjsonArrayConverter converter() {
+        if (converter == null) {
+            converter = new JjsonArrayConverter();
+        }
+        return converter;
     }
 
     public JjsonArray ofString(String json) throws JjsonException {
@@ -43,7 +52,6 @@ public final class JjsonArrayConverter extends JjsonConverter {
             int index = 1;
 
             final JjsonArray jjsonArray = new JjsonArray();
-            final JjsonObjectConverter jjsonObjectConverter = new JjsonObjectConverter();
 
             do {
                 final Object[] findFirst = findCharWithoutSpace(jsonChars, index);
@@ -55,11 +63,11 @@ public final class JjsonArrayConverter extends JjsonConverter {
                 final Object value = valueIndex[1];
 
                 switch (valueType) {
-                    case NULL -> jjsonArray.put((Object) null);
+                    case NULL -> jjsonArray.put(null);
                     case NUMBER -> jjsonArray.put((Number) value);
                     case STRING -> jjsonArray.put((String) value);
                     case BOOLEAN -> jjsonArray.put((boolean) value);
-                    case JSON_OBJECT -> jjsonArray.put(jjsonObjectConverter.ofString((String) value));
+                    case JSON_OBJECT -> jjsonArray.put(JjsonObjectConverter.converter().ofString((String) value));
                     case JSON_ARRAY -> jjsonArray.put(ofString((String) value));
                 }
 
@@ -81,14 +89,13 @@ public final class JjsonArrayConverter extends JjsonConverter {
     public String encode(final JjsonArray jjsonArray) {
 
         final StringBuilder jsonString = new StringBuilder("[");
-        final JjsonObjectConverter jjsonConverter = new JjsonObjectConverter();
 
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
             if (item instanceof final String value) {
                 jsonString.append('"').append(stringFormatterReverse(value)).append('"');
             } else if (item instanceof final JjsonObject value) {
-                jsonString.append(jjsonConverter.encode(value));
+                jsonString.append(JjsonObjectConverter.converter().encode(value));
             } else if (item instanceof final JjsonArray value) {
                 jsonString.append(encode(value));
             } else {
@@ -113,14 +120,12 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
         final StringBuilder jsonString = new StringBuilder("[").append('\n').append(space(numberOfSpace));
 
-        final JjsonObjectConverter jjsonConverter = new JjsonObjectConverter();
-
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
             if (item instanceof final String value) {
                 jsonString.append('"').append(stringFormatterReverse(value)).append('"');
             } else if (item instanceof final JjsonObject value) {
-                jsonString.append(jjsonConverter.encodeFormatter(value, numberOfSpace + 1));
+                jsonString.append(JjsonObjectConverter.converter().encodeFormatter(value, numberOfSpace + 1));
             } else if (item instanceof final JjsonArray value) {
                 jsonString.append(encodeFormatter(value, numberOfSpace + 1));
             } else {
@@ -142,30 +147,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
         if (collection == null || collection.isEmpty()) {
             return jjsonArray;
         }
-
-        final JjsonObjectConverter jjsonConverter = new JjsonObjectConverter();
-
-        for (final Object itemObj : collection) {
-            if (itemObj instanceof final Map<?, ?> value) {
-                jjsonArray.put(jjsonConverter.ofMap(value));
-            } else if (itemObj instanceof final Collection<?> value) {
-                jjsonArray.put(ofCollection(value));
-            } else if (itemObj instanceof final Object[] value) {
-                jjsonArray.put(ofArray(value));
-            } else if (itemObj instanceof final int[] value) {
-                jjsonArray.put(ofArray(value));
-            } else if (itemObj instanceof final long[] value) {
-                jjsonArray.put(ofArray(value));
-            } else if (itemObj instanceof final short[] value) {
-                jjsonArray.put(ofArray(value));
-            } else if (itemObj instanceof final double[] value) {
-                jjsonArray.put(ofArray(value));
-            } else if (itemObj instanceof final float[] value) {
-                jjsonArray.put(ofArray(value));
-            } else {
-                jjsonArray.putValue(itemObj);
-            }
-        }
+        collection.forEach(jjsonArray::put);
         return jjsonArray;
     }
 
