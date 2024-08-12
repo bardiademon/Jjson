@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,7 +22,7 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     private static final Logger logger = new Logger(JjsonObject.class);
 
-    private final LinkedHashMap<String, Object> jsonMap = new LinkedHashMap<>();
+    private final Map<String, Object> jsonMap = new ConcurrentHashMap<>();
 
     public JjsonObject() {
     }

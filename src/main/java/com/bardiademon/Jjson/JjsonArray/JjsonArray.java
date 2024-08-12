@@ -13,12 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArrayCollection, JjsonArrayGetter, JjsonArrayStream, JjsonFileWriter {
     private static final Logger logger = new Logger(JjsonArray.class);
 
-    private final LinkedList<Object> array = new LinkedList<>();
+    private final List<Object> array = new CopyOnWriteArrayList<>();
 
     public JjsonArray() {
     }
