@@ -18,19 +18,19 @@ Install
 #### CURL
 
 ```bash
-curl -L -o 'bardiademon.Jjson-2.2.1.jar' 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-2.2.1.jar'
+curl -L -o 'bardiademon.Jjson-3.0.0.jar' 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-3.0.0.jar'
 ```
 
 #### Windows
 
 ```shell
-Invoke-WebRequest -Uri 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-2.2.1.jar' -OutFile 'bardiademon.Jjson-2.1.1.jar'
+Invoke-WebRequest -Uri 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-3.0.0.jar' -OutFile 'bardiademon.Jjson-3.0.0.jar'
 ```
 
 * Step 2. Install the Jjson JAR file
 
 ```bash
-mvn install:install-file -Dfile='bardiademon.Jjson-2.2.1.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='2.2.1' -Dpackaging=jar
+mvn install:install-file -Dfile='bardiademon.Jjson-3.0.0.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='3.0.0' -Dpackaging=jar
 ```
 
 * Step 3. Add the dependency
@@ -40,7 +40,7 @@ mvn install:install-file -Dfile='bardiademon.Jjson-2.2.1.jar' -DgroupId='com.bar
 <dependency>
     <groupId>com.bardiademon</groupId>
     <artifactId>Jjson</artifactId>
-    <version>2.2.1</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
