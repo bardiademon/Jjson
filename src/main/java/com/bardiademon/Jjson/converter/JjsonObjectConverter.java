@@ -2,9 +2,11 @@ package com.bardiademon.Jjson.converter;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
+import com.bardiademon.Jjson.util.Null;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +72,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
                 final JsonValueType valueType = (JsonValueType) indexValue[2];
 
                 switch (valueType) {
-                    case NULL -> jjsonObject.put(key, (Object) null);
+                    case NULL -> jjsonObject.put(key, Null.NULL);
                     case NUMBER -> jjsonObject.put(key, (Number) value);
                     case STRING -> jjsonObject.put(key, (String) value);
                     case BOOLEAN -> jjsonObject.put(key, (boolean) value);
@@ -122,7 +124,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
         final List<String> keys = jjsonObject.keys();
         for (int i = 0; i < keys.size(); i++) {
             final String key = keys.get(i);
-            final Object object = jjsonObject.getObject(key);
+            final Object object = jjsonObject.getObject(key) instanceof final JjsonClass<?> jsonClass ? jsonClass.jsonValue() : jjsonObject.getObject(key);
 
             jsonString.append('"').append(key).append('"').append(':');
 
@@ -156,7 +158,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
         final List<String> keys = jjsonObject.keys();
         for (int i = 0; i < keys.size(); i++) {
             final String key = keys.get(i);
-            final Object object = jjsonObject.getObject(key);
+            final Object object = jjsonObject.getObject(key) instanceof final JjsonClass<?> jsonClass ? jsonClass.jsonValue() : jjsonObject.getObject(key);
 
             jsonString.append('"').append(stringFormatterReverse(key)).append('"').append(':').append(" ");
 
@@ -180,21 +182,16 @@ public final class JjsonObjectConverter extends JjsonConverter {
     }
 
     public JjsonObject ofMap(final Map<?, ?> map) {
-
         final JjsonObject jjsonObject = JjsonObject.create();
-
         if (map == null || map.isEmpty()) {
             return jjsonObject;
         }
-
         for (final Object keyObj : map.keySet()) {
             if (keyObj == null) continue;
             final String key = keyObj.toString();
             final Object valueObj = map.get(key);
             jjsonObject.put(key, valueObj);
-
         }
-
         return jjsonObject;
     }
 

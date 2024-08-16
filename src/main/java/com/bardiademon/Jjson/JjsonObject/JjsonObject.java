@@ -1,14 +1,15 @@
 package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
-import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.io.JjsonReader;
 import com.bardiademon.Jjson.io.JjsonWriteToFile;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.converter.JjsonObjectConverter;
+import com.bardiademon.Jjson.util.Null;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,10 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
         return JjsonObjectConverter.converter().ofString(json);
     }
 
+    public static <T> JjsonObject ofClass(final T clazz) throws JjsonException {
+        return ClassToJjsonConverter.converter().toJjsonObject(clazz);
+    }
+
     public static JjsonObject ofMap(final Map<?, ?> map) {
         return JjsonObjectConverter.converter().ofMap(map);
     }
@@ -63,31 +68,49 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     }
 
     private <T> void putValue(final String key, final T value) {
-        jsonMap.put(JjsonObjectConverter.converter().stringFormatter(key), value instanceof final String strValue ? JjsonObjectConverter.converter().stringFormatter(strValue) : value);
+        if (value instanceof byte[] || value instanceof Byte[]) {
+            putBytesArray(key, value instanceof byte[] ? (byte[]) value : JjsonObjectConverter.converter().toPrimitive((Byte[]) value));
+        } else {
+            jsonMap.put(JjsonObjectConverter.converter().stringFormatter(key), value instanceof final String strValue ? JjsonObjectConverter.converter().stringFormatter(strValue) : (value == null ? Null.NULL : value));
+        }
     }
 
     @Override
     public <T> JjsonObject put(final String key, final T value) {
-        if (JjsonArrayConverter.converter().isInvalidValue(value)) {
-            if (value instanceof final int[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final long[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final short[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final float[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final double[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final Object[] val) {
-                putValue(key, JjsonArray.ofArray(val));
-            } else if (value instanceof final Collection<?> val) {
-                putValue(key, JjsonArray.ofCollection(val));
-            } else if (value instanceof final Map<?, ?> val) {
-                putValue(key, JjsonObject.ofMap(val));
-            } else {
-                putValue(key, value);
-            }
+        if (value instanceof final int[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final long[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final short[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final float[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final double[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final byte[] val) {
+            putValue(key, val);
+        } else if (value instanceof final Byte[] val) {
+            putValue(key, val);
+        } else if (value instanceof final Object[] val) {
+            putValue(key, JjsonArray.ofArray(val));
+        } else if (value instanceof final Collection<?> val) {
+            putValue(key, JjsonArray.ofCollection(val));
+        } else if (value instanceof final Map<?, ?> val) {
+            putValue(key, JjsonObject.ofMap(val));
+        } else if (value instanceof final Character val) {
+            putValue(key, String.valueOf(val));
+        } else {
+            putValue(key, value);
+        }
+        return this;
+    }
+
+    @Override
+    public JjsonObject putBytesArray(final String key, final byte[] bytes) {
+        try {
+            jsonMap.put(key, Base64.getEncoder().encodeToString(bytes));
+        } catch (Exception e) {
+            logger.error("Fail to put bytes array, Bytes: {}", bytes, e);
         }
         return this;
     }
@@ -188,9 +211,15 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     }
 
     @Override
+    public byte[] getBytes(final String key) {
+        return getBytes(key, null);
+    }
+
+    @Override
     public Object getObject(final String key, final Object def) {
         if (jsonMap.containsKey(JjsonObjectConverter.converter().stringFormatter(key))) {
-            return jsonMap.get(JjsonObjectConverter.converter().stringFormatter(key));
+            final Object obj = jsonMap.get(JjsonObjectConverter.converter().stringFormatter(key));
+            return obj instanceof Null ? def : obj;
         }
         return def;
     }
@@ -210,7 +239,9 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
             return def;
         } else if (object instanceof String) {
             return getString(key);
-        } else return object.toString();
+        } else {
+            return object.toString();
+        }
     }
 
     @Override
@@ -301,6 +332,18 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     public JjsonArray getJjsonArray(final String key, final JjsonArray def) {
         if (getObject(key) instanceof final JjsonArray value) {
             return value;
+        }
+        return def;
+    }
+
+    @Override
+    public byte[] getBytes(String key, byte[] def) {
+        if (getObject(key) instanceof final String base64) {
+            try {
+                return Base64.getDecoder().decode(base64);
+            } catch (Exception e) {
+                logger.error("Fail to Base64 to bytes array, Key: {} , Def: {} , Value: {}", key, def, base64, e);
+            }
         }
         return def;
     }

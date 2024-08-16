@@ -27,6 +27,8 @@ public interface JjsonArrayGetter {
 
     Boolean getBoolean(final int index);
 
+    byte[] getBytes(final int index);
+
     Object getObject(final int index, final Object def);
 
     String getString(final int index, final String def);
@@ -50,4 +52,6 @@ public interface JjsonArrayGetter {
     JjsonObject getJjsonObject(final int index, final JjsonObject def);
 
     JjsonArray getJjsonArray(final int index, final JjsonArray def);
+
+    byte[] getBytes(final int index, final byte[] def);
 }

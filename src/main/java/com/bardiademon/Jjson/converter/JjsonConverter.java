@@ -5,6 +5,7 @@ import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.util.Null;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -12,8 +13,6 @@ import java.io.StringReader;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
@@ -310,8 +309,10 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         return "  ".repeat(numberOfSpace);
     }
 
+    @Deprecated
     public <T> boolean isInvalidValue(final T value) {
         return (value == null
+                || value instanceof Null
                 || value instanceof String
                 || value instanceof Short
                 || value instanceof Integer
@@ -328,6 +329,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
                 || value instanceof Double[] || value instanceof double[]
                 || value instanceof Float[] || value instanceof float[]
                 || value instanceof Boolean[] || value instanceof boolean[]
+                || value instanceof Byte[] || value instanceof byte[]
 
                 // List
                 || value instanceof Collection<?>
@@ -336,5 +338,16 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
                 // Json
                 || value instanceof JjsonObject || value instanceof JjsonArray
         );
+    }
+
+    public byte[] toPrimitive(final Byte[] bytesObj) {
+        if (bytesObj == null) {
+            return null;
+        }
+        final byte[] byteArray = new byte[bytesObj.length];
+        for (int i = 0; i < bytesObj.length; i++) {
+            byteArray[i] = bytesObj[i];
+        }
+        return byteArray;
     }
 }

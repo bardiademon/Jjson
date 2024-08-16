@@ -2,9 +2,11 @@ package com.bardiademon.Jjson.converter;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.data.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
+import com.bardiademon.Jjson.util.Null;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -63,7 +65,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
                 final Object value = valueIndex[1];
 
                 switch (valueType) {
-                    case NULL -> jjsonArray.put(null);
+                    case NULL -> jjsonArray.put(Null.NULL);
                     case NUMBER -> jjsonArray.put((Number) value);
                     case STRING -> jjsonArray.put((String) value);
                     case BOOLEAN -> jjsonArray.put((boolean) value);
@@ -92,6 +94,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
+            item = item instanceof final JjsonClass jjsonClass ? jjsonClass.jsonValue() : item;
             if (item instanceof final String value) {
                 jsonString.append('"').append(stringFormatterReverse(value)).append('"');
             } else if (item instanceof final JjsonObject value) {
@@ -122,6 +125,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
+            item = item instanceof final JjsonClass jjsonClass ? jjsonClass.jsonValue() : item;
             if (item instanceof final String value) {
                 jsonString.append('"').append(stringFormatterReverse(value)).append('"');
             } else if (item instanceof final JjsonObject value) {
@@ -147,7 +151,13 @@ public final class JjsonArrayConverter extends JjsonConverter {
         if (collection == null || collection.isEmpty()) {
             return jjsonArray;
         }
-        collection.forEach(jjsonArray::put);
+        collection.forEach(item -> {
+            if (item == null) {
+                jjsonArray.put(Null.NULL);
+            } else {
+                jjsonArray.put(null);
+            }
+        });
         return jjsonArray;
     }
 

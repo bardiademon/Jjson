@@ -29,6 +29,8 @@ public interface JjsonObjectGetter {
 
     JjsonArray getJjsonArray(final String key);
 
+    byte[] getBytes(final String key);
+
     Object getObject(final String key, final Object def);
 
     String getString(final String key, final String def);
@@ -52,6 +54,8 @@ public interface JjsonObjectGetter {
     JjsonObject getJjsonObject(final String key, final JjsonObject def);
 
     JjsonArray getJjsonArray(final String key, final JjsonArray def);
+
+    byte[] getBytes(final String key, final byte[] def);
 
     List<String> keys();
 }
