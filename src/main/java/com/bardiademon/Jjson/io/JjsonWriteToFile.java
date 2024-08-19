@@ -25,7 +25,7 @@ public final class JjsonWriteToFile {
     }
 
     public static void write(final String jjson, final String path, final boolean replace, final Charset charset) throws IOException, JjsonException {
-        if (JjsonValidation.ofString(jjson)) {
+        if (JjsonValidation.ofString(jjson) || JjsonValidation.ofJsonLString(jjson)) {
 
             final File file = new File(path);
             if (!replace && file.exists()) {
@@ -76,6 +76,15 @@ public final class JjsonWriteToFile {
         } catch (JjsonException e) {
             logger.error("Fail to write file, invalid jjson file, Path: {} , Jjson: {}", path, encoder.encode());
             throw new IOException("Fail to write file");
+        }
+    }
+
+    public static void writeJsonL(final String encoder, final String path, final boolean replace, final Charset charset) throws IOException {
+        try {
+            write(encoder, path, replace, charset);
+        } catch (JjsonException e) {
+            logger.error("Fail to write jsonl to file, invalid jjsonL file, Path: {} , Jjson: {}", path, encoder, e);
+            throw new IOException("Fail to write file", e);
         }
     }
 }

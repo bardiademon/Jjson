@@ -9,7 +9,7 @@ import java.io.IOException;
 public class JjsonTestWriterFile {
     public static void main(String[] args) throws JjsonException, IOException {
 
-        Logger.disableLog(false);
+        Logger.enableLog(true, true);
 
         final JjsonObject bardiademon = JjsonObject.ofStream(new FileInputStream("example/test-json-object.json"));
         System.out.println("bardiademon.encode() = " + bardiademon.encode());

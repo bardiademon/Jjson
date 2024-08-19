@@ -34,7 +34,7 @@ public class TestLongFile {
 
         final String str = "[" + new String(buffer, StandardCharsets.UTF_8) + "]";
 
-        Logger.disableLog(false);
+        Logger.enableLog(false, false);
 
         System.out.println("10 = " + 10);
 

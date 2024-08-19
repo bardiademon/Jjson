@@ -2,12 +2,10 @@ package com.bardiademon.Jjson.JjsonArray;
 
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 
-public interface JjsonArrayGetter {
+public interface JjsonArrayGetter extends JjsonLGetter {
     Object getObject(final int index);
 
     String getString(final int index);
-
-    String asString(final int index);
 
     Short getShort(final int index);
 
@@ -21,8 +19,6 @@ public interface JjsonArrayGetter {
 
     Number getNumber(final int index);
 
-    JjsonObject getJjsonObject(final int index);
-
     JjsonArray getJjsonArray(final int index);
 
     Boolean getBoolean(final int index);
@@ -32,8 +28,6 @@ public interface JjsonArrayGetter {
     Object getObject(final int index, final Object def);
 
     String getString(final int index, final String def);
-
-    String asString(final int index, final String def);
 
     Short getShort(final int index, final Short def);
 
@@ -48,8 +42,6 @@ public interface JjsonArrayGetter {
     Number getNumber(final int index, final Number def);
 
     Boolean getBoolean(final int index, final Boolean def);
-
-    JjsonObject getJjsonObject(final int index, final JjsonObject def);
 
     JjsonArray getJjsonArray(final int index, final JjsonArray def);
 

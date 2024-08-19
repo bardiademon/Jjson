@@ -14,7 +14,7 @@ public class Test12 {
                        "email": null
                 }
                 """;
-        Logger.disableLog(false);
+        Logger.enableLog(true, true);
 
         JjsonObject jjsonObject = JjsonObject.create().put("name", 645);
 

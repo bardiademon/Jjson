@@ -8,6 +8,9 @@ import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.util.Null;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,10 +42,10 @@ public final class JjsonArrayConverter extends JjsonConverter {
             json = json.trim();
 
             if (!json.startsWith("[")) {
-                throw new JjsonException("Json array must with [ start", 0);
+                throw new JjsonException("Json array must with '[' start", 0);
             }
             if (!json.endsWith("]")) {
-                throw new JjsonException("Json array must with ] end", json.length() - 1);
+                throw new JjsonException("Json array must with ']' end", json.length() - 1);
             }
 
             if (isEmpty(json, '[', ']')) {
@@ -87,8 +90,62 @@ public final class JjsonArrayConverter extends JjsonConverter {
         }
     }
 
+    public JjsonArray ofJsonLString(String jsonL) throws JjsonException {
+        try {
+
+            if (jsonL == null || jsonL.isEmpty()) {
+                throw new JjsonException("Json is null");
+            }
+
+            logger.trace("from string: {}", jsonL);
+
+            jsonL = jsonL.trim();
+
+            if (jsonL.startsWith("[")) {
+                throw new JjsonException("Json array must not with '[' start", 0);
+            }
+            if (jsonL.endsWith("]")) {
+                throw new JjsonException("Json array must not with ']' end", jsonL.length() - 1);
+            }
+
+            final JjsonArray jsonArrayL = JjsonArray.create();
+
+            logger.trace("Starting converting JSONL to JjsonArray, JSONL: {}", jsonL);
+            try {
+                final BufferedReader reader = new BufferedReader(new StringReader(jsonL));
+                String line;
+                int lineNumber = 0;
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.startsWith("{")) {
+                        throw new JjsonException("Each line should start with a '{'", line, lineNumber);
+                    }
+                    if (!line.endsWith("}")) {
+                        throw new JjsonException("Each line should end with a '}'", line, lineNumber);
+                    }
+                    final JjsonObject item = JjsonObjectConverter.converter().ofString(line);
+                    logger.trace("Successfully converted a line of JSONL. , LineNumber: {} , LineJsonString: {} , JjsonObject: {}", lineNumber, line, item);
+                    jsonArrayL.put(item);
+                }
+            } catch (IOException e) {
+                logger.error("Fail to converting JSONL to JjsonArray, JSONL: {}", jsonL, e);
+                throw new JjsonException(e);
+            }
+
+            logger.trace("Successfully converted JSONL to JjsonArray, JSONL: {} , JjsonArray: {}", jsonL, jsonArrayL);
+            return jsonArrayL;
+
+        } catch (Exception e) {
+            logger.error("Fail to validation json: {}", jsonL, e);
+            if (e instanceof JjsonException) throw e;
+            else throw new JjsonException(e);
+        }
+    }
 
     public String encode(final JjsonArray jjsonArray) {
+        if (jjsonArray == null || jjsonArray.isEmpty()) {
+            return JjsonArray.create().encode();
+        }
 
         final StringBuilder jsonString = new StringBuilder("[");
 
@@ -114,12 +171,35 @@ public final class JjsonArrayConverter extends JjsonConverter {
         return jsonString.toString();
     }
 
+    public String encodeJsonL(final JjsonArray jjsonArray) throws JjsonException {
+        logger.trace("Starting JSONL encoding, JjsonArray: {}", jjsonArray);
+        if (jjsonArray == null || jjsonArray.isEmpty()) {
+            return "";
+        }
+        final StringBuilder jsonL = new StringBuilder();
+        for (int i = 0, len = jjsonArray.size(); i < len; i++) {
+            final Object item = jjsonArray.getObject(i);
+            if (!(item instanceof JjsonObject)) {
+                throw new JjsonException("Each item in JjsonArray must be a JsonObject.", String.valueOf(item), i);
+            }
+            jsonL.append(JjsonObjectConverter.converter().encode((JjsonObject) item));
+            if ((i + 1) < len) {
+                jsonL.append('\n');
+            }
+        }
+        logger.trace("Successfully encoded JjsonArray to JSONL string, JjsonArray: {} , JSONLString: {}", jjsonArray, jsonL);
+        return jsonL.toString();
+    }
+
 
     public String encodeFormatter(final JjsonArray jjsonArray) {
         return encodeFormatter(jjsonArray, 1);
     }
 
     String encodeFormatter(final JjsonArray jjsonArray, int numberOfSpace) {
+        if (jjsonArray == null || jjsonArray.isEmpty()) {
+            return JjsonArray.create().encode();
+        }
 
         final StringBuilder jsonString = new StringBuilder("[").append('\n').append(space(numberOfSpace));
 
@@ -151,13 +231,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
         if (collection == null || collection.isEmpty()) {
             return jjsonArray;
         }
-        collection.forEach(item -> {
-            if (item == null) {
-                jjsonArray.put(Null.NULL);
-            } else {
-                jjsonArray.put(null);
-            }
-        });
+        collection.forEach(item -> jjsonArray.put(Objects.requireNonNullElse(item, Null.NULL)));
         return jjsonArray;
     }
 

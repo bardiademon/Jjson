@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ClassToJsonTest {
-    public static void main(String[] args) throws JjsonException {
+    public static void main(String[] args) throws JjsonException, IOException {
 
-        Logger.disableLog(true);
+        Logger.enableLog(true, true);
         try {
             Logger.setPath("log.txt");
         } catch (IOException e) {

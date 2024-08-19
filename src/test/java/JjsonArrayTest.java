@@ -9,7 +9,7 @@ import com.bardiademon.Jjson.util.Logger;
 public class JjsonArrayTest {
     public static void main(String[] args) throws JjsonException {
 
-        Logger.disableLog(false);
+        Logger.enableLog(true, true);
 
         final var jjsonArray = JjsonArray.ofString("""
                 [1,5,4.56,"Hi, I'm bardiademon\tJava Programmer",true,null,{},[],{"name":"bardiademon"},["Bardia Namjoo"],[{}],[[{}]],{"test":[{}]}]

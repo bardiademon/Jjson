@@ -5,7 +5,7 @@ import com.bardiademon.Jjson.util.Logger;
 public class JjsonTest5 {
     public static void main(String[] args) throws JjsonException {
 
-        Logger.disableLog(true);
+        Logger.enableLog(true, true);
 
         final JjsonObject jjsonObject = JjsonObject.ofString("""
                 {

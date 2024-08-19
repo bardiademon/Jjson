@@ -1,6 +1,7 @@
 package com.bardiademon.Jjson.JjsonArray;
 
 import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
+import com.bardiademon.Jjson.io.JjsonLFileWriter;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
 import com.bardiademon.Jjson.data.exception.JjsonException;
@@ -8,6 +9,7 @@ import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.io.JjsonReader;
 import com.bardiademon.Jjson.io.JjsonWriteToFile;
+import com.bardiademon.Jjson.util.JjsonValidation;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.util.Null;
 
@@ -18,20 +20,35 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
-public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArrayCollection, JjsonArrayGetter, JjsonArrayStream, JjsonFileWriter {
+public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArrayCollection, JjsonArrayGetter, JjsonArrayStream, JjsonFileWriter, JjsonLFileWriter {
     private static final Logger logger = new Logger(JjsonArray.class);
 
     private final List<Object> array = new CopyOnWriteArrayList<>();
 
+    private boolean isJsonL;
+
     public JjsonArray() {
+        this(false);
+    }
+
+    public JjsonArray(final boolean isJsonL) {
+        this.isJsonL = isJsonL;
     }
 
     public static JjsonArray create() {
         return new JjsonArray();
     }
 
+    public static JjsonArray createJsonL() {
+        return new JjsonArray(true);
+    }
+
     public static JjsonArray ofString(final String json) throws JjsonException {
         return JjsonArrayConverter.converter().ofString(json);
+    }
+
+    public static JjsonArray ofJsonLString(final String jsonL) throws JjsonException {
+        return JjsonArrayConverter.converter().ofJsonLString(jsonL);
     }
 
     public static JjsonArray ofCollection(final Collection<?> collection) {
@@ -81,6 +98,14 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
         return JjsonReader.ofFile(path, charset, JjsonArray::ofString);
     }
 
+    public static JjsonArray ofJsonLFile(final String path) throws JjsonException {
+        return JjsonReader.ofFile(path, JjsonArray::ofJsonLString);
+    }
+
+    public static JjsonArray ofJsonLFile(final String path, final Charset charset) throws JjsonException {
+        return JjsonReader.ofFile(path, charset, JjsonArray::ofJsonLString);
+    }
+
     public static JjsonArray ofStream(final InputStream inputStream) throws JjsonException {
         return JjsonReader.ofStream(inputStream, JjsonArray::ofString);
     }
@@ -89,37 +114,57 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
         return JjsonReader.ofStream(inputStream, charset, JjsonArray::ofString);
     }
 
+    public static JjsonArray ofJsonLStream(final InputStream inputStream, final Charset charset) throws JjsonException {
+        return JjsonReader.ofStream(inputStream, charset, JjsonArray::ofJsonLString);
+    }
+
+    public static JjsonArray ofJsonLStream(final InputStream inputStream) throws JjsonException {
+        return JjsonReader.ofStream(inputStream, JjsonArray::ofJsonLString);
+    }
+
     @Override
     public <T> JjsonArray put(final int index, final T value) {
-        if (value instanceof final int[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final long[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final short[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final float[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final double[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final byte[] val) putValue(index, val);
-        else if (value instanceof final Byte[] val) putValue(index, val);
-        else if (value instanceof final Object[] val) putValue(index, JjsonArray.ofArray(val));
-        else if (value instanceof final Collection<?> val) putValue(index, JjsonArray.ofCollection(val));
-        else if (value instanceof final Map<?, ?> val) putValue(index, JjsonObject.ofMap(val));
-        else if (value instanceof final Character val) putValue(index, String.valueOf(val));
-        else putValue(index, value);
+        if (isJsonL) {
+            if (value instanceof final JjsonObject jsonL) {
+                putValue(index, jsonL);
+            }
+        } else {
+            if (value instanceof final int[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final long[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final short[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final float[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final double[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final byte[] val) putValue(index, val);
+            else if (value instanceof final Byte[] val) putValue(index, val);
+            else if (value instanceof final Object[] val) putValue(index, JjsonArray.ofArray(val));
+            else if (value instanceof final Collection<?> val) putValue(index, JjsonArray.ofCollection(val));
+            else if (value instanceof final Map<?, ?> val) putValue(index, JjsonObject.ofMap(val));
+            else if (value instanceof final Character val) putValue(index, String.valueOf(val));
+            else putValue(index, value);
+        }
         return this;
     }
 
     @Override
     public <T> JjsonArray put(final T value) {
-        if (value instanceof final int[] val) put(JjsonArray.ofArray(val));
-        else if (value instanceof final long[] val) putValue(JjsonArray.ofArray(val));
-        else if (value instanceof final short[] val) putValue(JjsonArray.ofArray(val));
-        else if (value instanceof final float[] val) putValue(JjsonArray.ofArray(val));
-        else if (value instanceof final double[] val) putValue(JjsonArray.ofArray(val));
-        else if (value instanceof final byte[] val) putValue(val);
-        else if (value instanceof final Byte[] val) putValue(val);
-        else if (value instanceof final Object[] val) putValue(JjsonArray.ofArray(val));
-        else if (value instanceof final Collection<?> val) putValue(JjsonArray.ofCollection(val));
-        else if (value instanceof final Map<?, ?> val) putValue(JjsonObject.ofMap(val));
-        else if (value instanceof final Character val) putValue(String.valueOf(val));
-        else putValue(value);
+        if (isJsonL) {
+            if (value instanceof final JjsonObject jsonL) {
+                putValue(jsonL);
+            }
+        } else {
+            if (value instanceof final int[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final long[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final short[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final float[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final double[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final byte[] val) putValue(val);
+            else if (value instanceof final Byte[] val) putValue(val);
+            else if (value instanceof final Object[] val) putValue(JjsonArray.ofArray(val));
+            else if (value instanceof final Collection<?> val) putValue(JjsonArray.ofCollection(val));
+            else if (value instanceof final Map<?, ?> val) putValue(JjsonObject.ofMap(val));
+            else if (value instanceof final Character val) putValue(String.valueOf(val));
+            else putValue(value);
+        }
         return this;
     }
 
@@ -418,6 +463,10 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
         return JjsonArrayConverter.converter().encode(this);
     }
 
+    public String encodeJsonL() throws JjsonException {
+        return JjsonArrayConverter.converter().encodeJsonL(this);
+    }
+
     @Override
     public String encodeFormatter() {
         return JjsonArrayConverter.converter().encodeFormatter(this);
@@ -435,6 +484,25 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
     @Override
     public void write(final String path, final boolean replace, final boolean formatter, final Charset charset) throws IOException {
         JjsonWriteToFile.write(this, path, replace, formatter, charset);
+    }
+
+    @Override
+    public void writeJjsonL(final String path, final boolean replace, final Charset charset) throws IOException, JjsonException {
+        JjsonWriteToFile.writeJsonL(JjsonArrayConverter.converter().encodeJsonL(this), path, replace, charset);
+    }
+
+    public boolean isJsonL() {
+        return JjsonValidation.isJjsonL(this);
+    }
+
+    public boolean setJsonL(boolean jsonL) {
+        if (jsonL && JjsonValidation.isJjsonL(this)) {
+            isJsonL = true;
+            return true;
+        } else {
+            isJsonL = false;
+            return false;
+        }
     }
 
     @Override

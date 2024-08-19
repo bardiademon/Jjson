@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 public final class JjsonValidation {
+
+    private static final Logger logger = new Logger(JjsonValidation.class);
+
     private JjsonValidation() {
     }
 
@@ -20,10 +23,25 @@ public final class JjsonValidation {
             try {
                 JjsonArray.ofString(json);
                 return true;
-            } catch (Exception ignored) {
+            } catch (Exception ex) {
+                logger.error("Failed to validation json, JSON: {}", json, ex);
             }
         }
         return false;
+    }
+
+    public static boolean ofJsonLString(final String json) {
+        try {
+            JjsonArray.ofJsonLString(json);
+            return true;
+        } catch (Exception e) {
+            logger.error("Failed to validation jsonl, JSONL: {}", json, e);
+        }
+        return false;
+    }
+
+    public static boolean isJjsonL(final JjsonArray jjsonArray) {
+        return jjsonArray.stream().allMatch(item -> item instanceof JjsonObject);
     }
 
     public static boolean ofFile(final String path) {
@@ -38,7 +56,8 @@ public final class JjsonValidation {
             try {
                 JjsonArray.ofFile(path, charset);
                 return true;
-            } catch (JjsonException ignored) {
+            } catch (JjsonException ex) {
+                logger.error("Failed to validation json, JSON: {}", path, ex);
             }
         }
         return false;
@@ -56,7 +75,8 @@ public final class JjsonValidation {
             try {
                 JjsonArray.ofStream(inputStream, charset);
                 return true;
-            } catch (JjsonException ignored) {
+            } catch (JjsonException ex) {
+                logger.error("Failed to validation json", ex);
             }
         }
         return false;
