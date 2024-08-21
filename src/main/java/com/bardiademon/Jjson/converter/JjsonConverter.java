@@ -24,10 +24,14 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final String BF = "#@BF@#"; // \f
     private static final String BB = "#@BB@#"; // \b
 
-    protected int getCloseJsonValueString(final char[] jsonChars, final char open, final char close, final int start) {
+    protected int getCloseJsonValueString(final String json, final char[] jsonChars, final char open, final char close, final int start) throws JjsonException {
         int number = 1;
         int numberFound = 0;
         for (int i = start; i < jsonChars.length; i++) {
+            if (jsonChars[i] == '"') {
+                i = (int) getString(json, jsonChars, i)[0];
+                continue;
+            }
             if (jsonChars[i] == open) {
                 number++;
             } else if (jsonChars[i] == close) {
@@ -139,7 +143,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
             //  JsonObject
         } else if (aChar == '{') {
             logger.trace("JsonObject value, Char -> {} , Index: {}", aChar, index);
-            final int closeJsonValueString = getCloseJsonValueString(jsonChars, '{', '}', (int) findFirstChar[0] + 1);
+            final int closeJsonValueString = getCloseJsonValueString(json, jsonChars, '{', '}', (int) findFirstChar[0] + 1);
             if (closeJsonValueString == -1) {
                 throw new JjsonException("Invalid json object", (int) findFirstChar[0]);
             }
@@ -149,7 +153,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
             //  JsonArray
         } else if (aChar == '[') {
             logger.trace("JsonArray value, Char -> {} , Index: {}", aChar, index);
-            final int closeJsonValueString = getCloseJsonValueString(jsonChars, '[', ']', (int) findFirstChar[0] + 1);
+            final int closeJsonValueString = getCloseJsonValueString(json, jsonChars, '[', ']', (int) findFirstChar[0] + 1);
             if (closeJsonValueString == -1) {
                 throw new JjsonException("Invalid json array", (int) findFirstChar[0]);
             }
