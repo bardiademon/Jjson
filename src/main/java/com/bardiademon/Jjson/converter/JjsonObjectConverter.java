@@ -118,6 +118,9 @@ public final class JjsonObjectConverter extends JjsonConverter {
     }
 
     public String encode(final JjsonObject jjsonObject) {
+        if (jjsonObject == null || jjsonObject.isEmpty()) {
+            return "{}";
+        }
 
         final StringBuilder jsonString = new StringBuilder("{");
 

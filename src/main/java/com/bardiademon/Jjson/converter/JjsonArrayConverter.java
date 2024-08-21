@@ -144,7 +144,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
     public String encode(final JjsonArray jjsonArray) {
         if (jjsonArray == null || jjsonArray.isEmpty()) {
-            return JjsonArray.create().encode();
+            return "[]";
         }
 
         final StringBuilder jsonString = new StringBuilder("[");
