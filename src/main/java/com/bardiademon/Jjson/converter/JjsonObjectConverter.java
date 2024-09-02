@@ -28,6 +28,14 @@ public final class JjsonObjectConverter extends JjsonConverter {
     }
 
     public JjsonObject ofString(String json) throws JjsonException {
+        return ofString(json, 0);
+    }
+
+
+    /**
+     * The count parameter is used to ensure that if a conversion attempt fails, the second attempt does not lead to a third one in case the " character is not found, preventing an infinite loop.
+     */
+    private JjsonObject ofString(String json, final int count) throws JjsonException {
         try {
 
             if (json == null || json.isEmpty()) {
@@ -88,8 +96,14 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
         } catch (Exception e) {
             logger.error("Fail to validation json: {}", json, e);
-            if (e instanceof JjsonException) throw e;
-            else throw new JjsonException(e);
+            if (e instanceof JjsonException) {
+                if (count == 0 && json != null && !json.isEmpty() && e.getMessage().contains("Not found \"")) {
+                    logger.trace("Retry using replace \\\" with \", Json: {}", json, e);
+                    return ofString(json.replaceAll("\\\\\"", "\""), 1);
+                } else {
+                    throw e;
+                }
+            } else throw new JjsonException(e);
         }
     }
 
