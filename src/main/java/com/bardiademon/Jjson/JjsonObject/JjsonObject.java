@@ -2,6 +2,7 @@ package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
+import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
 import com.bardiademon.Jjson.data.exception.JjsonException;
@@ -16,7 +17,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObjectGetter, JjsonObjectCollection, JjsonObjectStream, JjsonFileWriter {
@@ -99,6 +99,12 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
             putValue(key, JjsonObject.ofMap(val));
         } else if (value instanceof final Character val) {
             putValue(key, String.valueOf(val));
+        } else if (value instanceof final Enum<?> val) {
+            if (val instanceof final JjsonClass<?> jjsonClass) {
+                putValue(key, jjsonClass.jsonValue());
+            } else {
+                putValue(key, val.toString());
+            }
         } else {
             putValue(key, value);
         }
@@ -158,6 +164,11 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     @Override
     public String getString(final String key) {
         return getString(key, null);
+    }
+
+    @Override
+    public String getRealString(final String key) {
+        return getRealString(key, null);
     }
 
     @Override
@@ -226,6 +237,14 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     @Override
     public String getString(final String key, final String def) {
+        if (getObject(key) instanceof final String value) {
+            return value;
+        }
+        return def;
+    }
+
+    @Override
+    public String getRealString(final String key, final String def) {
         if (getObject(key) instanceof final String value) {
             return JjsonObjectConverter.converter().stringFormatterReverse(value);
         }
@@ -350,7 +369,7 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     @Override
     public List<String> keys() {
-        return jsonMap.keySet().stream().map(item -> JjsonObjectConverter.converter().stringFormatterReverse(item)).collect(Collectors.toCollection(LinkedList::new));
+        return new LinkedList<>(jsonMap.keySet());
     }
 
     @Override

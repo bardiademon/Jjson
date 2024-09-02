@@ -151,9 +151,9 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
-            item = item instanceof final JjsonClass jjsonClass ? jjsonClass.jsonValue() : item;
+            item = item instanceof final JjsonClass<?> jjsonClass ? jjsonClass.jsonValue() : item;
             if (item instanceof final String value) {
-                jsonString.append('"').append(stringFormatterReverse(value)).append('"');
+                jsonString.append('"').append(value).append('"');
             } else if (item instanceof final JjsonObject value) {
                 jsonString.append(JjsonObjectConverter.converter().encode(value));
             } else if (item instanceof final JjsonArray value) {
@@ -207,7 +207,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
         jjsonArray.stream().forEach(item -> {
             item = item instanceof final JjsonClass jjsonClass ? jjsonClass.jsonValue() : item;
             if (item instanceof final String value) {
-                jsonString.append('"').append(stringFormatterReverse(value)).append('"');
+                jsonString.append('"').append(value).append('"');
             } else if (item instanceof final JjsonObject value) {
                 jsonString.append(JjsonObjectConverter.converter().encodeFormatter(value, numberOfSpace + 1));
             } else if (item instanceof final JjsonArray value) {

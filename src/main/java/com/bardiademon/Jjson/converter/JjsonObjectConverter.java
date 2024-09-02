@@ -132,7 +132,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
             jsonString.append('"').append(key).append('"').append(':');
 
             if (object instanceof final String value) {
-                jsonString.append('"').append(stringFormatterReverse(value)).append('"');
+                jsonString.append('"').append(value).append('"');
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encode(value));
             } else if (object instanceof final JjsonArray value) {
@@ -163,10 +163,10 @@ public final class JjsonObjectConverter extends JjsonConverter {
             final String key = keys.get(i);
             final Object object = jjsonObject.getObject(key) instanceof final JjsonClass<?> jsonClass ? jsonClass.jsonValue() : jjsonObject.getObject(key);
 
-            jsonString.append('"').append(stringFormatterReverse(key)).append('"').append(':').append(" ");
+            jsonString.append('"').append(key).append('"').append(':').append(" ");
 
             if (object instanceof final String value) {
-                jsonString.append('"').append(stringFormatterReverse(value)).append('"');
+                jsonString.append('"').append(value).append('"');
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encodeFormatter(value, numberOfSpace + 1));
             } else if (object instanceof final JjsonArray value) {

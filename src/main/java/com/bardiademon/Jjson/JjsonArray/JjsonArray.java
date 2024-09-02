@@ -1,6 +1,7 @@
 package com.bardiademon.Jjson.JjsonArray;
 
 import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
+import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.io.JjsonLFileWriter;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
 import com.bardiademon.Jjson.converter.JjsonEncoder;
@@ -140,7 +141,13 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
             else if (value instanceof final Collection<?> val) putValue(index, JjsonArray.ofCollection(val));
             else if (value instanceof final Map<?, ?> val) putValue(index, JjsonObject.ofMap(val));
             else if (value instanceof final Character val) putValue(index, String.valueOf(val));
-            else putValue(index, value);
+            else if (value instanceof final Enum<?> val) {
+                if (val instanceof final JjsonClass<?> jjsonClass) {
+                    putValue(index, jjsonClass.jsonValue());
+                } else {
+                    putValue(index, val.toString());
+                }
+            } else putValue(index, value);
         }
         return this;
     }
@@ -163,7 +170,13 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
             else if (value instanceof final Collection<?> val) putValue(JjsonArray.ofCollection(val));
             else if (value instanceof final Map<?, ?> val) putValue(JjsonObject.ofMap(val));
             else if (value instanceof final Character val) putValue(String.valueOf(val));
-            else putValue(value);
+            else if (value instanceof final Enum<?> val) {
+                if (val instanceof final JjsonClass<?> jjsonClass) {
+                    putValue(jjsonClass.jsonValue());
+                } else {
+                    putValue(val.toString());
+                }
+            } else putValue(value);
         }
         return this;
     }
@@ -239,6 +252,11 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
     }
 
     @Override
+    public String getRealString(int index) {
+        return getRealString(index, null);
+    }
+
+    @Override
     public String asString(final int index) {
         return asString(index, null);
     }
@@ -303,6 +321,14 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
 
     @Override
     public String getString(final int index, final String def) {
+        if (validIndex(index) && getObject(index) instanceof final String value) {
+            return value;
+        }
+        return def;
+    }
+
+    @Override
+    public String getRealString(int index, String def) {
         if (validIndex(index) && getObject(index) instanceof final String value) {
             return JjsonArrayConverter.converter().stringFormatterReverse(value);
         }

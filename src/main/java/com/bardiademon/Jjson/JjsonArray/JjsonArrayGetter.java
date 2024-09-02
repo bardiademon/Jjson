@@ -7,6 +7,8 @@ public interface JjsonArrayGetter extends JjsonLGetter {
 
     String getString(final int index);
 
+    String getRealString(final int index);
+
     Short getShort(final int index);
 
     Integer getInteger(final int index);
@@ -28,6 +30,8 @@ public interface JjsonArrayGetter extends JjsonLGetter {
     Object getObject(final int index, final Object def);
 
     String getString(final int index, final String def);
+
+    String getRealString(final int index, final String def);
 
     Short getShort(final int index, final Short def);
 

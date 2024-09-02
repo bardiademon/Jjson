@@ -73,7 +73,7 @@ public class ClassToJsonTest {
         System.out.println("joTestClass1 = " + joTestClass1);
 
 
-        Logger.closePrintWriter();
+        Logger.enableLog(false, false);
     }
 
 

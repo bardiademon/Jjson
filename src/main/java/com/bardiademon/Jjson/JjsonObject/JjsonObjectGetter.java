@@ -9,6 +9,8 @@ public interface JjsonObjectGetter {
 
     String getString(final String key);
 
+    String getRealString(final String key);
+
     String asString(final String key);
 
     Short getShort(final String key);
@@ -34,6 +36,8 @@ public interface JjsonObjectGetter {
     Object getObject(final String key, final Object def);
 
     String getString(final String key, final String def);
+
+    String getRealString(final String key, final String def);
 
     String asString(final String key, final String def);
 
