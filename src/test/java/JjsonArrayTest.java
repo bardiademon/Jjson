@@ -2,8 +2,8 @@ import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonArray.JjsonArrayPut;
 import com.bardiademon.Jjson.JjsonArray.JjsonArrayGetter;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.converter.JjsonEncoder;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.encoder.JjsonEncoder;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 
 public class JjsonArrayTest {

@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.converter.clazz;
+package com.bardiademon.Jjson.converter.clazz.converter;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;

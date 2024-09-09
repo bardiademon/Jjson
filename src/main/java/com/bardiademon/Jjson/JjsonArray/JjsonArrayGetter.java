@@ -1,13 +1,15 @@
 package com.bardiademon.Jjson.JjsonArray;
 
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.data.model.JjsonString;
 
 public interface JjsonArrayGetter extends JjsonLGetter {
     Object getObject(final int index);
 
     String getString(final int index);
 
-    String getRealString(final int index);
+    JjsonString getJjsonString(final int index);
+
+    String getOriginalString(final int index);
 
     Short getShort(final int index);
 
@@ -29,9 +31,11 @@ public interface JjsonArrayGetter extends JjsonLGetter {
 
     Object getObject(final int index, final Object def);
 
+    JjsonString getJjsonString(final int index, final JjsonString def);
+
     String getString(final int index, final String def);
 
-    String getRealString(final int index, final String def);
+    String getOriginalString(final int index, final String def);
 
     Short getShort(final int index, final Short def);
 

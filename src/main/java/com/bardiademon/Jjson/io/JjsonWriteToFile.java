@@ -1,8 +1,8 @@
 package com.bardiademon.Jjson.io;
 
-import com.bardiademon.Jjson.converter.JjsonEncoder;
-import com.bardiademon.Jjson.data.exception.JjsonException;
-import com.bardiademon.Jjson.util.JjsonValidation;
+import com.bardiademon.Jjson.encoder.JjsonEncoder;
+import com.bardiademon.Jjson.exception.JjsonException;
+import com.bardiademon.Jjson.validation.JjsonValidation;
 import com.bardiademon.Jjson.util.Logger;
 
 import java.io.File;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
-import static com.bardiademon.Jjson.converter.JjsonCharset.getCharset;
+import static com.bardiademon.Jjson.config.JjsonCharset.getCharset;
 
 public final class JjsonWriteToFile {
 

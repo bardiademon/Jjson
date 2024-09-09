@@ -1,15 +1,18 @@
 package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.data.model.JjsonString;
 
 import java.util.List;
 
 public interface JjsonObjectGetter {
     Object getObject(final String key);
 
+    JjsonString getJjsonString(final String key);
+
     String getString(final String key);
 
-    String getRealString(final String key);
+    String getOriginalString(final String key);
 
     String asString(final String key);
 
@@ -35,9 +38,11 @@ public interface JjsonObjectGetter {
 
     Object getObject(final String key, final Object def);
 
+    JjsonString getJjsonString(final String key, final JjsonString def);
+
     String getString(final String key, final String def);
 
-    String getRealString(final String key, final String def);
+    String getOriginalString(final String key, final String def);
 
     String asString(final String key, final String def);
 

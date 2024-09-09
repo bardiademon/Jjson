@@ -1,6 +1,5 @@
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.exception.JjsonException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

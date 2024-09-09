@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.converter;
+package com.bardiademon.Jjson.config;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

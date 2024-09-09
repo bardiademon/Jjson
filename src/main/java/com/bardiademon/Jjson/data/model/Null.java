@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.util;
+package com.bardiademon.Jjson.data.model;
 
 import java.util.Objects;
 

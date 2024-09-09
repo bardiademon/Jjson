@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson;
+package com.bardiademon.Jjson.data.collection;
 
 public interface JjsonCollection {
     int size();

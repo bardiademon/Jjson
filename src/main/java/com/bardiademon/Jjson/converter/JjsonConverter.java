@@ -4,8 +4,8 @@ import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
-import com.bardiademon.Jjson.data.exception.JjsonException;
-import com.bardiademon.Jjson.util.Null;
+import com.bardiademon.Jjson.exception.JjsonException;
+import com.bardiademon.Jjson.data.model.Null;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -14,6 +14,9 @@ import java.util.Map;
 
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final Logger logger = new Logger(JjsonConverter.class);
+
+    JjsonConverter() {
+    }
 
     protected int getCloseJsonValueString(final String json, final char[] jsonChars, final char open, final char close, final int start) throws JjsonException {
         int number = 1;
@@ -48,20 +51,6 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         return objects != null && objects.length == 2 && objects[1] instanceof Character ? objects[1].toString() : null;
     }
 
-    protected Object[] goTo(final char[] jsonChars, final int start, final char aChar, final boolean checkBackSlash) {
-        for (int i = start; i < jsonChars.length; i++) {
-            if (jsonChars[i] == aChar) {
-                if (checkBackSlash) {
-                    if ((i - 1 >= 0 && jsonChars[i - 1] == '\\') && (i - 2 >= 0 && jsonChars[i - 2] != '\\')) {
-                        continue;
-                    }
-                }
-                return new Object[]{i, jsonChars[i]};
-            }
-        }
-        return null;
-    }
-
     protected Object[] getString(final String json, final char[] jsonChars, int index) throws JjsonException {
         final Object[] findQuotation = findCharWithoutSpace(jsonChars, index);
         if (findQuotation == null || ((char) findQuotation[1]) != '"') {
@@ -69,7 +58,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         }
         index = (int) findQuotation[0] + 1;
 
-        final Object[] findSecondQuotation = goTo(jsonChars, index, '"', true);
+        final Object[] findSecondQuotation = findEndDoubleQuote(jsonChars, index);
         if (findSecondQuotation == null || ((char) findSecondQuotation[1]) != '"') {
             throw new JjsonException("Not found \"", getCharFromResultObject(findSecondQuotation), index);
         }
@@ -79,6 +68,22 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
         index = (int) findSecondQuotation[0] + 1;
 
         return new Object[]{index, string};
+    }
+
+    protected Object[] findEndDoubleQuote(final char[] jsonChars, final int start) {
+        for (int i = start; i < jsonChars.length; i++) {
+            if (jsonChars[i] == '"') {
+                int backslashCount = 0;
+                for (int j = i - 1; j >= 0 && jsonChars[j] == '\\'; j--) {
+                    backslashCount++;
+                }
+                if (backslashCount % 2 == 1) {
+                    continue;  // نادیده گرفتن این "
+                }
+                return new Object[]{i, jsonChars[i]};
+            }
+        }
+        return null;
     }
 
     protected Object[] getValue(final Object[] findFirstChar, final String json, final char[] jsonChars, int index) throws JjsonException {
@@ -153,6 +158,7 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
 
             // InvalidValue
         } else {
+            logger.error("Invalid value, Char: {} , Index: {}", aChar, index);
             throw new JjsonException("Invalid value", String.valueOf(aChar), index);
         }
     }
@@ -209,36 +215,6 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
             }
         }
         return i;
-    }
-
-    public String stringFormatter(final String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-//        '\"', '\'', '\n', '\r', '\t', '\b', '\f', '\\'
-        return str
-                .replace("\\", "\\\\") // جایگزینی کاراکتر \
-                .replace("\"", "\\\"") // جایگزینی کاراکتر "
-                .replace("\n", "\\n")  // جایگزینی کاراکتر newline
-                .replace("\r", "\\r")  // جایگزینی کاراکتر carriage return
-                .replace("\t", "\\t")  // جایگزینی کاراکتر tab
-                .replace("\b", "\\b")  // جایگزینی کاراکتر backspace
-                .replace("\f", "\\f"); // جایگزینی کاراکتر form feed
-    }
-
-    public String stringFormatterReverse(final String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-//        '\"', '\'', '\n', '\r', '\t', '\b', '\f', '\\'
-        return str
-                .replace("\\\\", "\\") // جایگزینی کاراکتر \
-                .replace("\\\"", "\"") // جایگزینی کاراکتر "
-                .replace("\\n", "\n")  // جایگزینی کاراکتر newline
-                .replace("\\r", "\r")  // جایگزینی کاراکتر carriage return
-                .replace("\\t", "\t")  // جایگزینی کاراکتر tab
-                .replace("\\b", "\b")  // جایگزینی کاراکتر backspace
-                .replace("\\f", "\f"); // جایگزینی کاراکتر form feed
     }
 
     protected interface If {

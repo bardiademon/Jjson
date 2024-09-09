@@ -1,8 +1,11 @@
-package com.bardiademon.Jjson.converter.clazz;
+package com.bardiademon.Jjson.converter.clazz.converter;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.converter.clazz.JjsonClass;
+import com.bardiademon.Jjson.converter.clazz.JjsonInclude;
+import com.bardiademon.Jjson.converter.clazz.JjsonProperty;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 
 import java.lang.reflect.*;

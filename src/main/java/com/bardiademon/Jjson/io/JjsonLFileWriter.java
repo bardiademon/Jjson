@@ -1,12 +1,16 @@
 package com.bardiademon.Jjson.io;
 
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.exception.JjsonException;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import static com.bardiademon.Jjson.converter.JjsonCharset.getCharset;
+import static com.bardiademon.Jjson.config.JjsonCharset.getCharset;
 
+/**
+ * JjsonLFileWriter
+ * L => JsonL
+ */
 public interface JjsonLFileWriter {
 
     boolean replace = false;

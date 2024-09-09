@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.data.exception;
+package com.bardiademon.Jjson.exception;
 
 public final class JjsonException extends Exception {
 

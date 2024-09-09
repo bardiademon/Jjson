@@ -1,6 +1,6 @@
 package com.bardiademon.Jjson.JjsonArray;
 
-import com.bardiademon.Jjson.JjsonCollection;
+import com.bardiademon.Jjson.data.collection.JjsonCollection;
 
 public interface JjsonArrayCollection extends JjsonCollection {
     boolean remove(final int index);

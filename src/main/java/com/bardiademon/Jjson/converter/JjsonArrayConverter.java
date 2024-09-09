@@ -3,10 +3,11 @@ package com.bardiademon.Jjson.converter;
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.data.model.JjsonString;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
-import com.bardiademon.Jjson.util.Null;
+import com.bardiademon.Jjson.data.model.Null;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
             if (e instanceof JjsonException) {
                 if (count == 0 && json != null && !json.isEmpty() && e.getMessage().contains("Not found \"")) {
                     logger.trace("Retry using replace \\\" with \", Json: {}", json, e);
-                    return ofString(json.replaceAll("\\\\\"", "\""), 1);
+                    return ofString(json.replace("\\\"", "\""), 1);
                 } else {
                     throw e;
                 }
@@ -165,7 +166,9 @@ public final class JjsonArrayConverter extends JjsonConverter {
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
             item = item instanceof final JjsonClass<?> jjsonClass ? jjsonClass.jsonValue() : item;
-            if (item instanceof final String value) {
+            if (item instanceof final JjsonString value) {
+                jsonString.append('"').append(value).append('"');
+            } else if (item instanceof final String value) {
                 jsonString.append('"').append(value).append('"');
             } else if (item instanceof final JjsonObject value) {
                 jsonString.append(JjsonObjectConverter.converter().encode(value));
@@ -218,8 +221,10 @@ public final class JjsonArrayConverter extends JjsonConverter {
 
         final AtomicInteger i = new AtomicInteger(0);
         jjsonArray.stream().forEach(item -> {
-            item = item instanceof final JjsonClass jjsonClass ? jjsonClass.jsonValue() : item;
-            if (item instanceof final String value) {
+            item = item instanceof final JjsonClass<?> jjsonClass ? jjsonClass.jsonValue() : item;
+            if (item instanceof final JjsonString value) {
+                jsonString.append('"').append(value).append('"');
+            } else if (item instanceof final String value) {
                 jsonString.append('"').append(value).append('"');
             } else if (item instanceof final JjsonObject value) {
                 jsonString.append(JjsonObjectConverter.converter().encodeFormatter(value, numberOfSpace + 1));

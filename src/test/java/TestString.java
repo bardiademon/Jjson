@@ -1,6 +1,6 @@
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.converter.JjsonObjectConverter;
+import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
 
 public class TestString {
     public static void main(String[] args) {
@@ -11,7 +11,7 @@ public class TestString {
                    خط سوم بدون کاراکتر خاص
                 """.trim();
 
-        final String stringFormatter = JjsonObjectConverter.converter().stringFormatter(text);
+        final String stringFormatter = JjsonStringConverter.escaped(text).escaped();
         System.out.println("stringFormatter = " + stringFormatter);
 
         final JjsonObject jjsonObject = JjsonObject.create().put("text", text);
@@ -22,14 +22,14 @@ public class TestString {
 
         jjsonObject.put("text2", "text2");
 
-        System.out.println("jjsonObject.getRealString(\"text\") = " + jjsonObject.getRealString("text2", "text2\n"));
+        System.out.println("jjsonObject.getRealString(\"text\") = " + jjsonObject.getOriginalString("text2", "text2\n"));
 
 
         final JjsonArray array = JjsonArray.create().put(text);
         System.out.println("array.getString(0) = " + array.getString(0));
         System.out.println("array.encode() = " + array.encode());
         System.out.println("array.encodeFormatter() = " + array.encodeFormatter());
-        System.out.println("array.getRealString(0) = " + array.getRealString(0));
+        System.out.println("array.getRealString(0) = " + array.getOriginalString(0));
 
     }
 }

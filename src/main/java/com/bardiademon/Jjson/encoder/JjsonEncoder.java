@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.converter;
+package com.bardiademon.Jjson.encoder;
 
 public interface JjsonEncoder {
     String encode();

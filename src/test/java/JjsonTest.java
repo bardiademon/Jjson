@@ -1,5 +1,5 @@
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.exception.JjsonException;
 
 public final class JjsonTest {
     public static void main(final String[] args) throws JjsonException {

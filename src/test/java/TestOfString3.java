@@ -1,6 +1,6 @@
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.exception.JjsonException;
 
 public class TestOfString3 {
     public static void main(String[] args) throws JjsonException {

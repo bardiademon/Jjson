@@ -3,10 +3,11 @@ package com.bardiademon.Jjson.converter;
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.data.model.JjsonString;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.util.Logger;
-import com.bardiademon.Jjson.util.Null;
+import com.bardiademon.Jjson.data.model.Null;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,6 @@ public final class JjsonObjectConverter extends JjsonConverter {
     public JjsonObject ofString(String json) throws JjsonException {
         return ofString(json, 0);
     }
-
 
     /**
      * The count parameter is used to ensure that if a conversion attempt fails, the second attempt does not lead to a third one in case the " character is not found, preventing an infinite loop.
@@ -69,7 +69,6 @@ public final class JjsonObjectConverter extends JjsonConverter {
             }
 
             do {
-
                 final Object[] keyIndex = getKey(json, jsonChars, index);
                 index = (int) keyIndex[0];
                 final Object[] indexValue = getValue(json, jsonChars, index);
@@ -99,7 +98,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
             if (e instanceof JjsonException) {
                 if (count == 0 && json != null && !json.isEmpty() && e.getMessage().contains("Not found \"")) {
                     logger.trace("Retry using replace \\\" with \", Json: {}", json, e);
-                    return ofString(json.replaceAll("\\\\\"", "\""), 1);
+                    return ofString(json.replace("\\\"", "\""), 1);
                 } else {
                     throw e;
                 }
@@ -145,7 +144,9 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
             jsonString.append('"').append(key).append('"').append(':');
 
-            if (object instanceof final String value) {
+            if (object instanceof final JjsonString value) {
+                jsonString.append('"').append(value).append('"');
+            } else if (object instanceof final String value) {
                 jsonString.append('"').append(value).append('"');
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encode(value));
@@ -179,7 +180,9 @@ public final class JjsonObjectConverter extends JjsonConverter {
 
             jsonString.append('"').append(key).append('"').append(':').append(" ");
 
-            if (object instanceof final String value) {
+            if (object instanceof final JjsonString value) {
+                jsonString.append('"').append(value).append('"');
+            } else if (object instanceof final String value) {
                 jsonString.append('"').append(value).append('"');
             } else if (object instanceof final JjsonObject value) {
                 jsonString.append(encodeFormatter(value, numberOfSpace + 1));

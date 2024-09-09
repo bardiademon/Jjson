@@ -3,7 +3,7 @@ package com.bardiademon.Jjson.io;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import static com.bardiademon.Jjson.converter.JjsonCharset.getCharset;
+import static com.bardiademon.Jjson.config.JjsonCharset.getCharset;
 
 public interface JjsonFileWriter {
 

@@ -1,16 +1,18 @@
 package com.bardiademon.Jjson.JjsonObject;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
+import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
+import com.bardiademon.Jjson.converter.clazz.converter.ClassToJjsonConverter;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
+import com.bardiademon.Jjson.data.model.JjsonString;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
-import com.bardiademon.Jjson.converter.JjsonEncoder;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.encoder.JjsonEncoder;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.io.JjsonReader;
 import com.bardiademon.Jjson.io.JjsonWriteToFile;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.converter.JjsonObjectConverter;
-import com.bardiademon.Jjson.util.Null;
+import com.bardiademon.Jjson.data.model.Null;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,9 +71,10 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     private <T> void putValue(final String key, final T value) {
         if (value instanceof byte[] || value instanceof Byte[]) {
-            putBytesArray(key, value instanceof byte[] ? (byte[]) value : JjsonObjectConverter.converter().toPrimitive((Byte[]) value));
+            putBytesArray(JjsonStringConverter.escaped(key).escaped(), value instanceof byte[] ? (byte[]) value : JjsonObjectConverter.converter().toPrimitive((Byte[]) value));
         } else {
-            jsonMap.put(JjsonObjectConverter.converter().stringFormatter(key), value instanceof final String strValue ? JjsonObjectConverter.converter().stringFormatter(strValue) : (value == null ? Null.NULL : value));
+            jsonMap.put(JjsonStringConverter.escaped(key).escaped(),
+                    value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
         }
     }
 
@@ -162,13 +165,18 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     }
 
     @Override
+    public JjsonString getJjsonString(String key) {
+        return getJjsonString(key, null);
+    }
+
+    @Override
     public String getString(final String key) {
         return getString(key, null);
     }
 
     @Override
-    public String getRealString(final String key) {
-        return getRealString(key, null);
+    public String getOriginalString(final String key) {
+        return getOriginalString(key, null);
     }
 
     @Override
@@ -228,25 +236,37 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     @Override
     public Object getObject(final String key, final Object def) {
-        if (jsonMap.containsKey(JjsonObjectConverter.converter().stringFormatter(key))) {
-            final Object obj = jsonMap.get(JjsonObjectConverter.converter().stringFormatter(key));
+        final String jjsonKey = JjsonStringConverter.escaped(key).escaped();
+        if (jsonMap.containsKey(jjsonKey)) {
+            final Object obj = jsonMap.get(jjsonKey);
             return obj instanceof Null ? def : obj;
         }
         return def;
     }
 
     @Override
-    public String getString(final String key, final String def) {
-        if (getObject(key) instanceof final String value) {
+    public JjsonString getJjsonString(final String key, final JjsonString def) {
+        if (getObject(key) instanceof final JjsonString value) {
             return value;
         }
         return def;
     }
 
+
     @Override
-    public String getRealString(final String key, final String def) {
-        if (getObject(key) instanceof final String value) {
-            return JjsonObjectConverter.converter().stringFormatterReverse(value);
+    public String getString(final String key, final String def) {
+        final JjsonString jjsonString = getJjsonString(key, new JjsonString(def, null));
+        if (jjsonString != null) {
+            return jjsonString.escaped();
+        }
+        return def;
+    }
+
+    @Override
+    public String getOriginalString(final String key, final String def) {
+        final JjsonString jjsonString = getJjsonString(key, new JjsonString(def, null));
+        if (jjsonString != null) {
+            return jjsonString.original();
         }
         return def;
     }
@@ -259,6 +279,12 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
         } else if (object instanceof String) {
             return getString(key);
         } else {
+            if (object instanceof final JjsonClass<?> jjsonClass) {
+                final Object jsonClassValue = jjsonClass.jsonValue();
+                if (jsonClassValue instanceof final String jsonClassStringValue) {
+                    return jsonClassStringValue;
+                }
+            }
             return object.toString();
         }
     }

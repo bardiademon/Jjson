@@ -1,18 +1,20 @@
 package com.bardiademon.Jjson.JjsonArray;
 
-import com.bardiademon.Jjson.converter.clazz.ClassToJjsonConverter;
+import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
+import com.bardiademon.Jjson.converter.clazz.converter.ClassToJjsonConverter;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
+import com.bardiademon.Jjson.data.model.JjsonString;
 import com.bardiademon.Jjson.io.JjsonLFileWriter;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
-import com.bardiademon.Jjson.converter.JjsonEncoder;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.encoder.JjsonEncoder;
+import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.io.JjsonReader;
 import com.bardiademon.Jjson.io.JjsonWriteToFile;
-import com.bardiademon.Jjson.util.JjsonValidation;
+import com.bardiademon.Jjson.validation.JjsonValidation;
 import com.bardiademon.Jjson.util.Logger;
-import com.bardiademon.Jjson.util.Null;
+import com.bardiademon.Jjson.data.model.Null;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -185,7 +187,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
         if (value instanceof byte[] || value instanceof Byte[]) {
             putBytesArray(value instanceof byte[] ? (byte[]) value : JjsonArrayConverter.converter().toPrimitive((Byte[]) value));
         } else {
-            array.add(value instanceof final String strValue ? JjsonArrayConverter.converter().stringFormatter(strValue) : (value == null ? Null.NULL : value));
+            array.add(value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
         }
     }
 
@@ -194,7 +196,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
             if (value instanceof byte[] || value instanceof Byte[]) {
                 putBytesArray(index, value instanceof byte[] ? (byte[]) value : JjsonArrayConverter.converter().toPrimitive((Byte[]) value));
             } else {
-                array.set(index, value instanceof final String strValue ? JjsonArrayConverter.converter().stringFormatter(strValue) : (value == null ? Null.NULL : value));
+                array.set(index, value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
             }
         }
     }
@@ -252,8 +254,13 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
     }
 
     @Override
-    public String getRealString(int index) {
-        return getRealString(index, null);
+    public JjsonString getJjsonString(final int index) {
+        return getJjsonString(index, null);
+    }
+
+    @Override
+    public String getOriginalString(int index) {
+        return getOriginalString(index, null);
     }
 
     @Override
@@ -320,17 +327,27 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
     }
 
     @Override
-    public String getString(final int index, final String def) {
-        if (validIndex(index) && getObject(index) instanceof final String value) {
+    public JjsonString getJjsonString(final int index, final JjsonString def) {
+        if (validIndex(index) && getObject(index) instanceof final JjsonString value) {
             return value;
         }
         return def;
     }
 
     @Override
-    public String getRealString(int index, String def) {
-        if (validIndex(index) && getObject(index) instanceof final String value) {
-            return JjsonArrayConverter.converter().stringFormatterReverse(value);
+    public String getString(final int index, final String def) {
+        final JjsonString jjsonString = getJjsonString(index, new JjsonString(def, null));
+        if (jjsonString != null) {
+            return jjsonString.escaped();
+        }
+        return def;
+    }
+
+    @Override
+    public String getOriginalString(final int index, final String def) {
+        final JjsonString jjsonString = getJjsonString(index, new JjsonString(def, null));
+        if (jjsonString != null) {
+            return jjsonString.original();
         }
         return def;
     }
@@ -344,6 +361,12 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
             } else if (objectValue instanceof String) {
                 return getString(index);
             } else {
+                if (objectValue instanceof final JjsonClass<?> jjsonClass) {
+                    final Object jsonClassValue = jjsonClass.jsonValue();
+                    if (jsonClassValue instanceof final String jsonClassStringValue) {
+                        return jsonClassStringValue;
+                    }
+                }
                 return objectValue.toString();
             }
         }

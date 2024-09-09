@@ -2,7 +2,7 @@ import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonInclude;
 import com.bardiademon.Jjson.converter.clazz.JjsonProperty;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.exception.JjsonException;
 
 import java.util.Arrays;
 

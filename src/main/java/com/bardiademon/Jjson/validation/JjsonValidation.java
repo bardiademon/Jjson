@@ -1,9 +1,10 @@
-package com.bardiademon.Jjson.util;
+package com.bardiademon.Jjson.validation;
 
 import com.bardiademon.Jjson.JjsonArray.JjsonArray;
 import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.converter.JjsonCharset;
-import com.bardiademon.Jjson.data.exception.JjsonException;
+import com.bardiademon.Jjson.config.JjsonCharset;
+import com.bardiademon.Jjson.exception.JjsonException;
+import com.bardiademon.Jjson.util.Logger;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
