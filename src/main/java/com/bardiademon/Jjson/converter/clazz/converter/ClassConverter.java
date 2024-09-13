@@ -12,6 +12,7 @@ sealed class ClassConverter permits ClassToJjsonConverter {
         return value != null && (
                 !(
                         value instanceof String
+                                || value instanceof Enum<?>
                                 || value.getClass().isPrimitive()
                                 || value instanceof Number
                                 || value instanceof Boolean
