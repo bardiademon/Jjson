@@ -1,5 +1,5 @@
 import com.bardiademon.Jjson.io.JjsonFileWriter;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 

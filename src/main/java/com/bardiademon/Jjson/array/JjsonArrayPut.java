@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.JjsonArray;
+package com.bardiademon.Jjson.array;
 
 public interface JjsonArrayPut {
     <T> JjsonArrayPut put(final int index, final T value);

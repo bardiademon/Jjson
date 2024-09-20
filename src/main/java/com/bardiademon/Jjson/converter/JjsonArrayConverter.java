@@ -1,7 +1,7 @@
 package com.bardiademon.Jjson.converter;
 
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.data.model.JjsonString;
 import com.bardiademon.Jjson.exception.JjsonException;
@@ -22,6 +22,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
     private static JjsonArrayConverter converter;
 
     private JjsonArrayConverter() {
+        super();
     }
 
     public static JjsonArrayConverter converter() {
@@ -31,6 +32,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
         return converter;
     }
 
+    @Deprecated
     public JjsonArray ofString(String json) throws JjsonException {
         return ofString(json, 0);
     }
@@ -38,6 +40,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
     /**
      * The count parameter is used to ensure that if a conversion attempt fails, the second attempt does not lead to a third one in case the " character is not found, preventing an infinite loop.
      */
+    @Deprecated
     private JjsonArray ofString(String json, final int count) throws JjsonException {
         try {
 
@@ -57,7 +60,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
             }
 
             if (isEmpty(json, '[', ']')) {
-                return JjsonArray.create();
+                return new JjsonArray();
             }
 
             final char[] jsonChars = json.toCharArray();
@@ -104,6 +107,38 @@ public final class JjsonArrayConverter extends JjsonConverter {
         }
     }
 
+    public JjsonArray ofStringByJackson(String json) throws JjsonException {
+        try {
+            if (json == null || json.isEmpty()) {
+                throw new JjsonException("Json is null");
+            }
+
+            logger.trace("from string: {}", json);
+
+            json = json.trim();
+
+            if (!json.startsWith("[")) {
+                throw new JjsonException("Json array must with '[' start", 0);
+            }
+            if (!json.endsWith("]")) {
+                throw new JjsonException("Json array must with ']' end", json.length() - 1);
+            }
+
+            if (isEmpty(json, '[', ']')) {
+                return new JjsonArray();
+            }
+
+            final List<?> list = getObjectMapper().readValue(json, List.class);
+            logger.trace("Successfully json string to list by jackson, Json: {} , Result: {}", json, list);
+            final JjsonArray jjsonArray = ofCollection(list);
+            logger.trace("Successfully list to Jjson array, List: {} , JjsonArray: {}", list, jjsonArray);
+            return jjsonArray;
+        } catch (Exception e) {
+            logger.error("Fail to validation json: {}", json, e);
+            throw new JjsonException(e);
+        }
+    }
+
     public JjsonArray ofJsonLString(String jsonL) throws JjsonException {
         try {
 
@@ -137,7 +172,7 @@ public final class JjsonArrayConverter extends JjsonConverter {
                     if (!line.endsWith("}")) {
                         throw new JjsonException("Each line should end with a '}'", line, lineNumber);
                     }
-                    final JjsonObject item = JjsonObjectConverter.converter().ofString(line);
+                    final JjsonObject item = JjsonObjectConverter.converter().ofStringByJackson(line);
                     logger.trace("Successfully converted a line of JSONL. , LineNumber: {} , LineJsonString: {} , JjsonObject: {}", lineNumber, line, item);
                     jsonArrayL.put(item);
                 }
@@ -206,7 +241,6 @@ public final class JjsonArrayConverter extends JjsonConverter {
         logger.trace("Successfully encoded JjsonArray to JSONL string, JjsonArray: {} , JSONLString: {}", jjsonArray, jsonL);
         return jsonL.toString();
     }
-
 
     public String encodeFormatter(final JjsonArray jjsonArray) {
         return encodeFormatter(jjsonArray, 1);

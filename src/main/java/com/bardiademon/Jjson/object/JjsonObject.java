@@ -1,6 +1,6 @@
-package com.bardiademon.Jjson.JjsonObject;
+package com.bardiademon.Jjson.object;
 
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.array.JjsonArray;
 import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
 import com.bardiademon.Jjson.converter.clazz.converter.ClassToJjsonConverter;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
@@ -42,7 +42,7 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
     }
 
     public static JjsonObject ofString(final String json) throws JjsonException {
-        return JjsonObjectConverter.converter().ofString(json);
+        return JjsonObjectConverter.converter().ofStringByJackson(json);
     }
 
     public static <T> JjsonObject ofClass(final T clazz) throws JjsonException {
@@ -71,10 +71,9 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     private <T> void putValue(final String key, final T value) {
         if (value instanceof byte[] || value instanceof Byte[]) {
-            putBytesArray(JjsonStringConverter.escaped(key).escaped(), value instanceof byte[] ? (byte[]) value : JjsonObjectConverter.converter().toPrimitive((Byte[]) value));
+            putBytesArray(key, value instanceof byte[] ? (byte[]) value : JjsonObjectConverter.converter().toPrimitive((Byte[]) value));
         } else {
-            jsonMap.put(JjsonStringConverter.escaped(key).escaped(),
-                    value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
+            jsonMap.put(key, value instanceof final String strValue ? JjsonStringConverter.escapedByJackson(strValue) : (value == null ? Null.NULL : value));
         }
     }
 
@@ -236,9 +235,8 @@ public final class JjsonObject implements JjsonEncoder, JjsonObjectPut, JjsonObj
 
     @Override
     public Object getObject(final String key, final Object def) {
-        final String jjsonKey = JjsonStringConverter.escaped(key).escaped();
-        if (jsonMap.containsKey(jjsonKey)) {
-            final Object obj = jsonMap.get(jjsonKey);
+        if (jsonMap.containsKey(key)) {
+            final Object obj = jsonMap.get(key);
             return obj instanceof Null ? def : obj;
         }
         return def;

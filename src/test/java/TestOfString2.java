@@ -1,4 +1,4 @@
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;
 
@@ -17,6 +17,19 @@ public class TestOfString2 {
                                      }
                                  }
                 """;
+
+        final String json = """
+                {
+                                     "error": {
+                                         "message": "Cannot specify both model and engine",
+                                         "type": "invalid_request_error",
+                                         "param": null,
+                                         "code": null
+                                     }
+                                 }
+                """;
+
+        System.out.println("JjsonObject.ofString(json) = " + JjsonObject.ofString(json));
 
         final JjsonObject jjsonObject = new JjsonObject().put("message", message);
 

@@ -1,4 +1,4 @@
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.exception.JjsonException;
 
 public class TestString6 {
@@ -7,6 +7,8 @@ public class TestString6 {
         final String joString = "{\"message_data\":[{\"type\":\"TEXT\",\"content\":\"سلام\\n\\n\"}]}";
 
         System.out.println("JjsonObject.ofString(joString) = " + JjsonObject.ofString(joString));
+
+
 
     }
 }

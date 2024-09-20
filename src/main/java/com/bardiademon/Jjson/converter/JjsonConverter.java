@@ -1,11 +1,12 @@
 package com.bardiademon.Jjson.converter;
 
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.util.Logger;
 import com.bardiademon.Jjson.data.enums.JsonValueType;
 import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.data.model.Null;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -14,8 +15,10 @@ import java.util.Map;
 
 sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
     private static final Logger logger = new Logger(JjsonConverter.class);
+    private final ObjectMapper objectMapper;
 
     JjsonConverter() {
+        objectMapper = new ObjectMapper();
     }
 
     protected int getCloseJsonValueString(final String json, final char[] jsonChars, final char open, final char close, final int start) throws JjsonException {
@@ -266,5 +269,9 @@ sealed class JjsonConverter permits JjsonArrayConverter, JjsonObjectConverter {
             byteArray[i] = bytesObj[i];
         }
         return byteArray;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 }

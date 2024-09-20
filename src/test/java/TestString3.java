@@ -1,4 +1,4 @@
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.exception.JjsonException;
 
 public class TestString3 {
@@ -12,6 +12,7 @@ public class TestString3 {
 
         System.out.println("JjsonObject.ofString(joStr) = " + jjsonObject);
         System.out.println("jjsonObject.getOriginalString(\"name\") = " + jjsonObject.getOriginalString("name"));
+        System.out.println("jjsonObject.getJjsonString(\"name\") = " + jjsonObject.getString("name"));
 
     }
 }

@@ -1,4 +1,4 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.array.JjsonArray;
 import com.bardiademon.Jjson.exception.JjsonException;
 
 public class TestNullJson {

@@ -1,6 +1,6 @@
-package com.bardiademon.Jjson.JjsonObject;
+package com.bardiademon.Jjson.object;
 
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.array.JjsonArray;
 import com.bardiademon.Jjson.data.model.JjsonString;
 
 import java.util.List;

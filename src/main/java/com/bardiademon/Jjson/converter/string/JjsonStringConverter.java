@@ -1,6 +1,8 @@
 package com.bardiademon.Jjson.converter.string;
 
+import com.bardiademon.Jjson.converter.JjsonObjectConverter;
 import com.bardiademon.Jjson.data.model.JjsonString;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -14,6 +16,7 @@ public final class JjsonStringConverter {
     private JjsonStringConverter() {
     }
 
+    @Deprecated
     public static JjsonString escaped(final String input) {
         if (input == null || input.trim().isEmpty()) {
             return new JjsonString(input, null);
@@ -98,6 +101,34 @@ public final class JjsonStringConverter {
         }
 
         return result.toString();
+    }
+
+    public static JjsonString escapedByJackson(final String input) {
+        if (input == null || input.isEmpty()) {
+            return new JjsonString(input, null);
+        }
+        try {
+            String escaped = JjsonObjectConverter.converter().getObjectMapper().writeValueAsString(input);
+            escaped = escaped.substring(1, escaped.length() - 1);
+            if (input.contentEquals(escaped)) {
+                return new JjsonString(input, null);
+            } else {
+                return new JjsonString(input, escaped);
+            }
+        } catch (JsonProcessingException e) {
+            return new JjsonString(input, null);
+        }
+    }
+
+    public static String unescaped(final String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        try {
+            return JjsonObjectConverter.converter().getObjectMapper().readTree(input).asText();
+        } catch (JsonProcessingException e) {
+            return input;
+        }
     }
 
 }

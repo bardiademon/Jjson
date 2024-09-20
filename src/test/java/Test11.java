@@ -1,4 +1,4 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
+import com.bardiademon.Jjson.array.JjsonArray;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -17,5 +17,4 @@ public record JjsonString(String original, String escaped) {
     public String toPlainText() {
         return JjsonStringConverter.toPlainText(original());
     }
-
 }

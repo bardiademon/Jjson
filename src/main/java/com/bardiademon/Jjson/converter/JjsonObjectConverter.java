@@ -1,7 +1,7 @@
 package com.bardiademon.Jjson.converter;
 
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.data.model.JjsonString;
 import com.bardiademon.Jjson.exception.JjsonException;
@@ -19,6 +19,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
     private static JjsonObjectConverter converter;
 
     private JjsonObjectConverter() {
+        super();
     }
 
     public static JjsonObjectConverter converter() {
@@ -28,6 +29,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
         return converter;
     }
 
+    @Deprecated
     public JjsonObject ofString(String json) throws JjsonException {
         return ofString(json, 0);
     }
@@ -35,6 +37,7 @@ public final class JjsonObjectConverter extends JjsonConverter {
     /**
      * The count parameter is used to ensure that if a conversion attempt fails, the second attempt does not lead to a third one in case the " character is not found, preventing an infinite loop.
      */
+    @Deprecated
     private JjsonObject ofString(String json, final int count) throws JjsonException {
         try {
 
@@ -103,6 +106,39 @@ public final class JjsonObjectConverter extends JjsonConverter {
                     throw e;
                 }
             } else throw new JjsonException(e);
+        }
+    }
+
+    public JjsonObject ofStringByJackson(String json) throws JjsonException {
+        try {
+
+            if (json == null || json.isEmpty()) {
+                throw new JjsonException("Json is null");
+            }
+
+            logger.trace("from string: {}", json);
+
+            json = json.trim();
+
+            if (!json.startsWith("{")) {
+                throw new JjsonException("Json object must with { start", 0);
+            }
+            if (!json.endsWith("}")) {
+                throw new JjsonException("Json object must with } end", json.length() - 1);
+            }
+
+            if (isEmpty(json, '{', '}')) {
+                return new JjsonObject();
+            }
+
+            final Map<?, ?> map = getObjectMapper().readValue(json, Map.class);
+            logger.trace("Successfully mapped json string to map, Json: {} , Map: {}", json, map);
+            final JjsonObject jjsonObject = ofMap(map);
+            logger.trace("Successfully mapped map to JsonObject, Map: {} , JsonObject: {}", map, jjsonObject);
+            return jjsonObject;
+        } catch (Exception e) {
+            logger.error("Fail to validation json: {}", json, e);
+            throw new JjsonException(e);
         }
     }
 

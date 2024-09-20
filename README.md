@@ -1,6 +1,6 @@
 # JavaJson(Jjson)
 
-It is a library for managing, generating and working with Json, which is built without using any additional libraries
+It is a library for managing, generating and working with Json
 
 Java version
 -----
@@ -18,19 +18,19 @@ Install
 #### CURL
 
 ```bash
-curl -L -o 'bardiademon.Jjson-5.0.0.jar' 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-5.0.0.jar'
+curl -L -o 'bardiademon.Jjson-2583.06.29.jar' 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-2583.06.29.jar'
 ```
 
 #### Windows
 
 ```shell
-Invoke-WebRequest -Uri 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-5.0.0.jar' -OutFile 'bardiademon.Jjson-5.0.0.jar'
+Invoke-WebRequest -Uri 'https://github.com/bardiademon/Jjson/raw/main/releases/bardiademon.Jjson-2583.06.29.jar' -OutFile 'bardiademon.Jjson-2583.06.29.jar'
 ```
 
 * Step 2. Install the Jjson JAR file
 
 ```bash
-mvn install:install-file -Dfile='bardiademon.Jjson-5.0.0.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='5.0.0' -Dpackaging=jar
+mvn install:install-file -Dfile='bardiademon.Jjson-2583.06.29.jar' -DgroupId='com.bardiademon' -DartifactId='Jjson' -Dversion='2583.06.29' -Dpackaging=jar
 ```
 
 * Step 3. Add the dependency
@@ -40,7 +40,7 @@ mvn install:install-file -Dfile='bardiademon.Jjson-5.0.0.jar' -DgroupId='com.bar
 <dependency>
     <groupId>com.bardiademon</groupId>
     <artifactId>Jjson</artifactId>
-    <version>5.0.0</version>
+    <version>2583.06.29</version>
 </dependency>
 ```
 
@@ -302,8 +302,8 @@ Json Of Array/Collection/Map
 -----
 
 ```java
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 
 import java.util.List;
 

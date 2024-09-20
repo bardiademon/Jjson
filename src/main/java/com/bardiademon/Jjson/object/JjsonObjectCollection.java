@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.JjsonObject;
+package com.bardiademon.Jjson.object;
 
 import com.bardiademon.Jjson.data.collection.JjsonCollection;
 

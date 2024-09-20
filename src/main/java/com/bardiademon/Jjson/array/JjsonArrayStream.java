@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.JjsonArray;
+package com.bardiademon.Jjson.array;
 
 import java.util.stream.Stream;
 

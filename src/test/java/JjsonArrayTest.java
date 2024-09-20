@@ -1,7 +1,7 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonArray.JjsonArrayPut;
-import com.bardiademon.Jjson.JjsonArray.JjsonArrayGetter;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.array.JjsonArrayPut;
+import com.bardiademon.Jjson.array.JjsonArrayGetter;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.encoder.JjsonEncoder;
 import com.bardiademon.Jjson.exception.JjsonException;
 import com.bardiademon.Jjson.util.Logger;

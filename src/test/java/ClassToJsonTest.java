@@ -1,5 +1,5 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.converter.clazz.JjsonClass;
 import com.bardiademon.Jjson.converter.clazz.JjsonInclude;
 import com.bardiademon.Jjson.converter.clazz.JjsonProperty;

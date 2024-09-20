@@ -1,5 +1,5 @@
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.JjsonObject.JjsonObjectPut;
+import com.bardiademon.Jjson.object.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObjectPut;
 
 import java.io.IOException;
 

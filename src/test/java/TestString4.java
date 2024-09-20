@@ -1,5 +1,4 @@
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
-import com.bardiademon.Jjson.converter.JjsonObjectConverter;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.exception.JjsonException;
 
 public class TestString4 {

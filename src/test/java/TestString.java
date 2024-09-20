@@ -1,5 +1,5 @@
-import com.bardiademon.Jjson.JjsonArray.JjsonArray;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.array.JjsonArray;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
 
 public class TestString {
@@ -11,7 +11,7 @@ public class TestString {
                    خط سوم بدون کاراکتر خاص
                 """.trim();
 
-        final String stringFormatter = JjsonStringConverter.escaped(text).escaped();
+        final String stringFormatter = JjsonStringConverter.escapedByJackson(text).escaped();
         System.out.println("stringFormatter = " + stringFormatter);
 
         final JjsonObject jjsonObject = JjsonObject.create().put("text", text);

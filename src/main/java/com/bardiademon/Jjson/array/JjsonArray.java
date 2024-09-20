@@ -1,4 +1,4 @@
-package com.bardiademon.Jjson.JjsonArray;
+package com.bardiademon.Jjson.array;
 
 import com.bardiademon.Jjson.converter.string.JjsonStringConverter;
 import com.bardiademon.Jjson.converter.clazz.converter.ClassToJjsonConverter;
@@ -8,7 +8,7 @@ import com.bardiademon.Jjson.io.JjsonLFileWriter;
 import com.bardiademon.Jjson.io.JjsonFileWriter;
 import com.bardiademon.Jjson.encoder.JjsonEncoder;
 import com.bardiademon.Jjson.exception.JjsonException;
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 import com.bardiademon.Jjson.converter.JjsonArrayConverter;
 import com.bardiademon.Jjson.io.JjsonReader;
 import com.bardiademon.Jjson.io.JjsonWriteToFile;
@@ -47,7 +47,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
     }
 
     public static JjsonArray ofString(final String json) throws JjsonException {
-        return JjsonArrayConverter.converter().ofString(json);
+        return JjsonArrayConverter.converter().ofStringByJackson(json);
     }
 
     public static JjsonArray ofJsonLString(final String jsonL) throws JjsonException {
@@ -187,7 +187,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
         if (value instanceof byte[] || value instanceof Byte[]) {
             putBytesArray(value instanceof byte[] ? (byte[]) value : JjsonArrayConverter.converter().toPrimitive((Byte[]) value));
         } else {
-            array.add(value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
+            array.add(value instanceof final String strValue ? JjsonStringConverter.escapedByJackson(strValue) : (value == null ? Null.NULL : value));
         }
     }
 
@@ -196,7 +196,7 @@ public final class JjsonArray implements JjsonEncoder, JjsonArrayPut, JjsonArray
             if (value instanceof byte[] || value instanceof Byte[]) {
                 putBytesArray(index, value instanceof byte[] ? (byte[]) value : JjsonArrayConverter.converter().toPrimitive((Byte[]) value));
             } else {
-                array.set(index, value instanceof final String strValue ? JjsonStringConverter.escaped(strValue) : (value == null ? Null.NULL : value));
+                array.set(index, value instanceof final String strValue ? JjsonStringConverter.escapedByJackson(strValue) : (value == null ? Null.NULL : value));
             }
         }
     }

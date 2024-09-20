@@ -6,7 +6,7 @@
 
     <groupId>com.bardiademon</groupId>
     <artifactId>Jjson</artifactId>
-    <version>5.0.0</version>
+    <version>2583.06.29</version>
 
     <developers>
         <developer>
@@ -24,6 +24,7 @@
         <maven.plugin.validation>VERBOSE</maven.plugin.validation>
         <output.directory>${project.basedir}/releases</output.directory>
         <jar.final.name>bardiademon.Jjson-${project.version}</jar.final.name>
+        <jackson.version>2.17.2</jackson.version>
     </properties>
 
     <distributionManagement>
@@ -32,6 +33,14 @@
             <url>ftp://ftp.bardiademon.com</url>
         </repository>
     </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
 

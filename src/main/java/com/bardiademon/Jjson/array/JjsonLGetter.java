@@ -1,6 +1,6 @@
-package com.bardiademon.Jjson.JjsonArray;
+package com.bardiademon.Jjson.array;
 
-import com.bardiademon.Jjson.JjsonObject.JjsonObject;
+import com.bardiademon.Jjson.object.JjsonObject;
 
 public interface JjsonLGetter {
 
